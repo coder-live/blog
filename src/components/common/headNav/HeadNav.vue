@@ -17,17 +17,23 @@
         <el-button type="primary" @click= 'loginTap'>登录</el-button>
       </div>
     </div>
+    <RegisterBox :isShow= 'RegisterBoxVisible' 
+    @finish= 'cancel' 
+    v-if= 'RegisterBoxRealVisible'/>
   </div>
-
+  
 </template>
 
 <script>
-import LoginBox from '@/components/content/loginBox/LoginBox'
-import RegisterBox from '@/components/content/registerBox/RegisterBox'
+import LoginBox from '@/components/content/loginBox/LoginBox';
+import RegisterBox from '@/components/content/registerBox/RegisterBox';
 export default {
   name: 'HeadNav',
   data() {
     return {
+      RegisterBoxRealVisible: true,
+      // 注册弹窗
+      RegisterBoxVisible: false,
       //弹窗的key值
       key: 0,
       navList: [
@@ -52,8 +58,8 @@ export default {
           path: '/about'
         },
       ],
-      currentIndex: 6,
-      hoverIndex: 6,
+      currentIndex: -1,
+      hoverIndex: -1,
     }
   },
   components: {
@@ -61,36 +67,18 @@ export default {
     RegisterBox
   },
   methods: {
-    //登录注册时间
+    //登录注册事件
     registerTap() {
-      const h = this.$createElement;
-        this.$msgbox({
-          title: '注册 :',
-          message: h('RegisterBox',{key: ++this.key}),
-          closeOnClickModal: false,
-          showConfirmButton: false,
-          showCancelButton: false,
-        }).then(action => {
-          this.$message({
-            type: 'info',
-            message: 'action: ' + action
-          });
-        }).catch((err)=>err);
+      this.RegisterBoxRealVisible = true;
+      this.RegisterBoxVisible = true;
     },
     loginTap() {
-      const h = this.$createElement;
-        this.$msgbox({
-          title: '登录 :',
-          message: h('LoginBox', {key: this.key++}),
-          closeOnClickModal: false,
-          showConfirmButton: false,
-          showCancelButton: false,
-        }).then(action => {
-          this.$message({
-            type: 'info',
-            message: 'action: ' + action
-          });
-        });
+      
+    },
+    //退出弹窗
+    cancel() {
+      this.RegisterBoxRealVisible = false;
+      this.RegisterBoxVisible = false;
     },
     // navClick( index ) {
     //   this.currentIndex = index;

@@ -1,37 +1,50 @@
 <template>
   <div class= 'register-box'>
-    <el-form :model= 'registerData' 
-    label-width="100px" 
-    :rules= 'registerRule'
-    class= 'register-form'
-    ref= 'registerBox'>
-      <el-form-item label= '用户名' prop= 'user'>
-        <el-input v-model= 'registerData.user' placeholder="请输入用户名"></el-input>
-      </el-form-item>
-      <el-form-item label= '密码' prop= 'pwd'>
-        <el-input v-model= 'registerData.pwd' show-password placeholder="请输入密码"></el-input>
-      </el-form-item>
-      <el-form-item label= '确认密码' prop= 'pwds'>
-        <el-input v-model= 'registerData.pwds' show-password placeholder="请确认密码"></el-input>
-      </el-form-item>
-      <el-form-item label= '验证码' class= 'code' prop= 'code'>
-        <el-input v-model= 'registerData.code'></el-input>
-        <div class='svg' v-html= 'svgCode'></div>
-        <el-link type="primary" 
-        :disabled= 'refresh.disable' 
-        class='refresh' @click= 'getCode'
-        v-html= 'refresh.text'></el-link>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="success" class= 'submit'>立即注册</el-button>
-      </el-form-item>
-    </el-form>
+  
+    <el-dialog 
+      title="注册 :"
+      :visible.sync="isShow"
+      width="50%"
+      :modal-append-to-body= 'false'
+      :before-close="handleClose">
+      <el-form :model="registerData" 
+      status-icon :rules= "registerRule" ref="registerForm" 
+      label-width="100px" class="register-form">
+        <el-form-item label= '用户名' prop= 'user'>
+          <el-input v-model= 'registerData.user' placeholder="请输入用户名"></el-input>
+        </el-form-item>
+        <el-form-item label= '密码' prop= 'pwd'>
+          <el-input v-model= 'registerData.pwd' show-password placeholder="请输入密码"></el-input>
+        </el-form-item>
+        <el-form-item label= '确认密码' prop= 'pwds'>
+          <el-input v-model= 'registerData.pwds' show-password placeholder="请确认密码"></el-input>
+        </el-form-item>
+        <el-form-item label= '验证码' class= 'code' prop= 'code'>
+          <el-input v-model= 'registerData.code'></el-input>
+          <div class='svg' v-html= 'svgCode'></div>
+          <el-link type="primary" 
+          :disabled= 'refresh.disable' 
+          class='refresh' @click= 'getCode'
+          v-html= 'refresh.text'></el-link>
+        </el-form-item>
+        <el-form-item class= 'btn'>
+          <el-button @click="cancel()">取消</el-button>
+          <el-button type="success" 
+          @click= 'submitMsg("registerForm")'
+          :disabled= 'registerBtnShow'>立即注册</el-button>
+        </el-form-item>
+       
+      </el-form>
+    </el-dialog>
   </div>
 
 </template>
 
 <script>
-import {requestCode} from '@/network/request'
+
+
+import {request} from '@/network/request'
+
 export default {
   name: 'RegisterBox',
   data() {
@@ -45,12 +58,11 @@ export default {
       }else {
         callback(new Error('请输入密码'));
       }
-      this.registerData.pwds && this.$refs.registerBox.validateField('pwds');
+      this.registerData.pwds && this.$refs.registerForm.validateField('pwds');
     }
     let checkPwd = (rule, value, callback) => {
       if(value) {
         if (value !== this.registerData.pwd) {
-          // console.log(value,this.registerData.pwd)
           callback(new Error('两次输入密码不一致!'));
         } else {
           callback();
@@ -66,6 +78,8 @@ export default {
         pwds: '',
         code: '',
       },
+      //设置 注册按钮的隐藏 ,防止多次数据请求
+      registerBtnShow: false,
       registerRule: {
         user: [
           //{ type: 'string', pattarn: /[]{2,8}/ }
@@ -80,18 +94,17 @@ export default {
         ],
         code: [{
           validator: (rule, value, cb) => {
-            console.log(value)
             if(!value) {
               cb(new Error('请输入验证码'));
             }else{
               //请求验证 验证码
-              requestCode({
+              request({
                 method: 'post',
                 url: '/register/checkCode',
                 data: {code: value}
               }).then( res => {
-                console.log(res)
                 if(res.data.code === 0) {
+                  console.log('验证码正确')
                   cb();
                 }else {
                   cb(new Error('验证码错误'))
@@ -100,7 +113,7 @@ export default {
             }
           },
           required: true, 
-          trigger: ['blur', 'change']
+          trigger: ['blur']
         }]
       },
       svgCode: 'loading ...',
@@ -111,10 +124,30 @@ export default {
       }
     }
   },
+  props: {
+    isShow: {
+      type: Boolean,
+      default() {
+        return false
+      }
+    },
+  },
+
   methods: {
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.cancel()
+        })
+        .catch(_ => {});
+    },
+    //取消事件
+    cancel() {
+      this.$emit('finish');
+    },
     //请求svg 验证码
     getCode() {
-      requestCode({
+      request({
         method: 'post',
         url: '/register/getCode'
       }).then( res => {
@@ -136,16 +169,59 @@ export default {
             this.refresh.text = ((res.data.time - t)/1000 |0)  + 's后可以刷新'
           }
         }, 1000);
-        console.log(res.data.data);
         
       }).catch(err=>console.log(err))
+    },
+    //提交信息 注册
+    submitMsg(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.registerBtnShow = true;
+          console.log('执行请求')
+          console.log(this.registerData)
+          request({
+            method: 'post',
+            url: '/register',
+            data: this.registerData
+          }).then(res => {
+            this.registerBtnShow = false;
+            switch (res.data.code) {
+              case 0:
+                this.$message({
+                  message: '注册成功,请前往登录 !',
+                  type: 'success'
+                })
+                this.cancel();
+                break;
+              case 1:
+                this.$message('用户名重复');
+                break;
+              case 3:
+                this.$message('请完善注册信息!');
+                break;
+              case 4:
+                this.$message.error('注册失败');
+                break;
+            };
+          }).catch(err => {
+            this.registerBtnShow = false;
+            console.log(err)
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     }
+    
   },
   mounted() {
     this.getCode();
+    
   },
   destroyed() {
     clearTimeout(this.refresh.time);
+    // console.log('组件销毁')
   }
 
 }
@@ -153,40 +229,43 @@ export default {
 
 <style scoped lang= 'less'>
   .register-box {
-    >.register-form {
-      padding-right: 20px;
-      >.code {
-        position: relative;
-        width: 180px;
-        height: 40px;
-        /deep/.svg {
-          position: absolute;
-          top: 0;
-          right: -100px;
-          width: 80px;
+    .el-dialog__body {
+      >.register-form {
+        padding-right: 20px;
+        /deep/ .code {
+          position: relative;
+          width: 180px;
           height: 40px;
-          /deep/svg {
-            width: 100%;
-            height: 100%;
+          /deep/ .svg {
+            position: absolute;
+            top: -5px;
+            right: -120px;
+            width: 80px;
+            height: 40px;
+            /deep/ svg {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          /deep/.refresh {
+            position: absolute;
+            top: 0px;
+            right: -282px;
+            height: 40px;
+            line-height: 40px;
+            letter-spacing: 2px;
+            padding: 0 10px;
+            cursor: pointer;
+            z-index: 2;
+            
+            &:hover {
+              opacity: .8;
+            }
           }
         }
-        /deep/.refresh {
-          position: absolute;
-          top: 60px;
-          right: -160px;
-          height: 40px;
-          line-height: 40px;
-          padding: 0 10px;
-          cursor: pointer;
-          z-index: 2;
-          
-          &:hover {
-            opacity: .8;
-          }
+        >.btn > .el-button--success {
+          margin-left: 50px;
         }
-      }
-      >.submit {
-        width: 114px;
       }
     }
   }

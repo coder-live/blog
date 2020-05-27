@@ -37,12 +37,3 @@ export function requestArticle() {
     })
   }
 }
-
-//关于验证码的请求
-export function requestCode( config ) {
-  const instance = axios.create({
-    baseURL: 'http://localhost:5002',
-    withCredentials: true
-  });
-  return instance(config);
-}
