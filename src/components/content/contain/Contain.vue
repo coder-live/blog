@@ -198,7 +198,7 @@ export default {
       this.title = data.data;
       //console.log(data);
     })
-    .catch((err) => console.log(err))
+    .catch((err) => console.log(err));
   },
   mounted() {
     // 固定栏的滚轮监听

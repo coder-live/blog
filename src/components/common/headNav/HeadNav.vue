@@ -10,16 +10,41 @@
           <router-link :to= 'item.path'> {{item.name}} </router-link>
         </li>
       </ul>
-      <div class="register">
-        <el-button type="primary" @click= 'registerTap'>注册</el-button>
+      <div class="btn" v-if= '!userLoginState'>
+        <div class="register">
+          <el-button type="primary" @click= 'registerTap'>注册</el-button>
+        </div>
+        <div class="login">
+          <el-button type="primary" @click= 'loginTap'>登录</el-button>
+        </div>
       </div>
-      <div class="login">
-        <el-button type="primary" @click= 'loginTap'>登录</el-button>
+      <div class="logining" v-else= 'userLoginState'>
+       
+        <div class="btn">
+          <el-dropdown trigger="hover" @command= 'hoverCommand'>
+            <div class="el-dropdown-link">
+              <div class="img">
+                <img :src=" 'http://localhost:5002' + userInfo.photo + '.jpg'" alt=""/>
+              </div>
+              <div class="user-name">{{userInfo.user}}</div>
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="user">个人信息</el-dropdown-item>
+              <el-dropdown-item command="logout">退出</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+
       </div>
     </div>
-    <RegisterBox :isShow= 'RegisterBoxVisible' 
-    @finish= 'cancel' 
-    v-if= 'RegisterBoxRealVisible'/>
+
+    <RegisterBox v-if= 'registerBoxRealVisible' 
+    :isShow= 'registerBoxVisible' 
+    @finish= 'cancelRegister'/>
+
+    <LoginBox v-if= 'loginBoxRealVisible'
+    :isLoginShow= 'loginBoxVisible'
+    @loginFinsh= 'cancelLogin'/>
   </div>
   
 </template>
@@ -31,9 +56,13 @@ export default {
   name: 'HeadNav',
   data() {
     return {
-      RegisterBoxRealVisible: true,
-      // 注册弹窗
-      RegisterBoxVisible: false,
+      //是否渲染
+      registerBoxRealVisible: false,
+      loginBoxRealVisible: false,
+      // 是否弹出弹窗
+      registerBoxVisible: false,
+      loginBoxVisible: false,
+      //是否注册
       //弹窗的key值
       key: 0,
       navList: [
@@ -66,19 +95,45 @@ export default {
     LoginBox,
     RegisterBox
   },
+  computed: {
+    userInfo() {
+      return this.$store.state.userInfo;
+    },
+    userLoginState() {
+      return this.$store.state.isLogin;
+    }
+  },
   methods: {
+    // 头像事件
+    hoverCommand( msg ) {
+      if( msg === 'user' ) {
+        this.$router.push('/index/userInfo')
+      }else{
+        window.localStorage.removeItem('token');
+        this.$store.dispatch( 'clearMsg' );
+        //console.log(2)
+      }
+    },
     //登录注册事件
     registerTap() {
-      this.RegisterBoxRealVisible = true;
-      this.RegisterBoxVisible = true;
+      this.registerBoxRealVisible = true;
+      this.registerBoxVisible = true;
     },
     loginTap() {
-      
+      this.loginBoxRealVisible = true;
+      this.loginBoxVisible = true;
     },
     //退出弹窗
-    cancel() {
-      this.RegisterBoxRealVisible = false;
-      this.RegisterBoxVisible = false;
+    cancelRegister() {
+      this.registerBoxRealVisible = false;
+      this.registerBoxVisible = false;
+    },
+    cancelLogin() {
+      this.loginBoxRealVisible = false;
+      this.loginBoxVisible = false;
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000)
     },
     // navClick( index ) {
     //   this.currentIndex = index;
@@ -90,6 +145,10 @@ export default {
     navLeave() {
       this.hoverIndex = this.currentIndex;
     }
+  },
+  created() {
+    // this.ifLogin = this.userLoginState;
+    // console.log(this.ifLogin,typeof())
   }
 }
 </script>
@@ -110,6 +169,7 @@ export default {
       margin: 0 auto;
       padding-right: 30px;
       >.log {
+        padding-left: 15px;
         margin-left: 20px;
         height: 60px;
         line-height: 60px;
@@ -166,17 +226,54 @@ export default {
           }
         }
       }
-      >.login, .register {
-        float: right;
-        width: 50px;
-        height: 60px;
-        margin: 0 7px;
-        line-height: 60px;
-        text-align: center;
-        >.el-button  {
-          padding: 12px;
+      >.btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        >.login, .register {
+          float: right;
+          width: 50px;
+          height: 60px;
+          margin: 0 7px;
+          line-height: 60px;
+          text-align: center;
+          >.el-button  {
+            padding: 12px;
+          }
         }
       }
+      >.logining {
+        padding-right: 35px;
+        position: absolute;
+        top: 4px;
+        right: 0;
+        text-align: center;
+        .el-dropdown {
+          &:focus {
+            outline: none;
+          }
+        }
+        .img {
+          width: 40px;
+          height: 37px;
+          overflow: hidden;
+          border-radius: 50%;
+          img {
+            width: 100%;
+            height: 100%;
+            transform: scale(1.35);
+          }
+        }
+        .user-name {
+          height: 20px;
+          line-height: 20px;
+          font-size: 12px;
+          font-weight: 500;
+          color: #222;
+
+        }    
+      }
+      
     }
   }
 </style>

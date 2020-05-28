@@ -58,6 +58,7 @@ export default {
       }else {
         callback(new Error('请输入密码'));
       }
+      //当第二次输入密码时 , 调用 验证方法
       this.registerData.pwds && this.$refs.registerForm.validateField('pwds');
     }
     let checkPwd = (rule, value, callback) => {
@@ -200,12 +201,12 @@ export default {
                 this.$message('请完善注册信息!');
                 break;
               case 4:
-                this.$message.error('注册失败');
+                this.$message.error('服务器错误,请稍后再试');
                 break;
             };
           }).catch(err => {
             this.registerBtnShow = false;
-            console.log(err)
+            return this.$message.error('服务器错误,请稍后再试');
           })
         } else {
           console.log('error submit!!');
