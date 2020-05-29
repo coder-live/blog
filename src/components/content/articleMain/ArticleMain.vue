@@ -293,8 +293,6 @@ export default {
         animation: appeare .7s infinite;
         animation-delay:.8s;
       }
-
-
     }
   }
 </style>
