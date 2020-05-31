@@ -24,7 +24,7 @@
           <el-dropdown trigger="hover" @command= 'hoverCommand'>
             <div class="el-dropdown-link">
               <div class="img">
-                <img :src=" 'http://localhost:5002' + userInfo.photo + '.jpg'" alt=""/>
+                <img :src="userInfo.photo" alt=""/>
               </div>
               <div class="user-name">{{userInfo.user}}</div>
             </div>

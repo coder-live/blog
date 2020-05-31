@@ -38,13 +38,13 @@
       </div>
       <ul :class= "['container', {loading: !articleAppear}]" v-else= '!pageLoad'>
         <li v-for= 'item in article'>
-          <div class="img"><a href="#"><img :src="'http://localhost:5002'+item.surface" alt=""/></a></div>
+          <div class="img"><a href="#"><img :src="item.surface" alt=""/></a></div>
           <div class="content">
             <div class="cont-title"><a href="#">{{item.title}}</a></div>
             <div class="cont-time">
-              {{item.data | getYear}}年
-              {{item.data | getMonth}}月
-              {{item.data | getDate}}日
+              {{item.date | getYear}}年
+              {{item.date | getMonth}}月
+              {{item.date | getDate}}日
             </div>
             <div class="cont-des">{{item.content}}</div>
             <a class= 'more' href="#">阅读更多</a>
@@ -209,6 +209,7 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
   },
   activated() {
+    //页面活跃 回顶
     document.documentElement.scrollTop = 0;
     this.navHover = false;
     this.reachBottom = false;
@@ -221,6 +222,7 @@ export default {
     }
   },
   beforeDestroy() {
+    //如果页面销毁
     this.destroy = true;
   },
   destroyed() {

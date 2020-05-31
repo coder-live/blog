@@ -50,10 +50,10 @@ export default {
   data() {
     let password = (rule, value, callback) => {
       if(value) {
-        if(/^[\w<>,.!|?;:'"{}@#$%()\/\-\]\[\\]{8,20}$/.test(value)) {
+        if(/^[\w<>,.!|?;:'"{}@#$%()\/\-\]\[\\]{6,20}$/.test(value)) {
           callback();
         }else {
-          callback(new Error('8至20位,不允许出现奇怪的字符'));
+          callback(new Error('6至20位,不允许出现奇怪的字符'));
         }
       }else {
         callback(new Error('请输入密码'));

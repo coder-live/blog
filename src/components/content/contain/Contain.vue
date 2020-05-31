@@ -10,7 +10,7 @@
         </div>
         <div class="title">
           <ul>
-            <li v-for= "(item,index) in tags"
+            <li v-for= "(item,index) in wholeTags"
             :class= "{stay: stayIndex == index}"
             @mouseenter= "titleEnter(index)"
             @mouseleave= "titleLeave"

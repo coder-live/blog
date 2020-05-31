@@ -37,3 +37,27 @@ export function requestArticle() {
     })
   }
 }
+
+//加载留言评论
+export function requestMessage(lmt) {
+  // console.log(lmt)
+  const instance = axios.create({
+    baseURL: 'http://localhost:5002',
+    withCredentials: true
+  });
+  // return instance(config);
+  let skip = 0;
+  let limit = lmt || 5;
+  return function() {
+    skip += limit;
+    return instance({
+      url: '/message',
+      method: 'post',
+      data: {
+        skip,
+        limit
+      }
+    })
+  }
+  
+}
