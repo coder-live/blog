@@ -4,9 +4,9 @@
       <div class="content loading">
         <h1>燕 十 三</h1>
         <p>剑气纵横三万里,一剑光寒十九洲</p>
-        <el-button type="primary">
-          <router-link to='/article/0'>Enter Blog</router-link>
-        </el-button>
+        <router-link to='/article/0'>
+          <el-button type="primary">Enter Blog</el-button>
+        </router-link>
       </div>
       <div class="downBtn" @click= 'slideDown'></div>
     </div>
@@ -69,17 +69,17 @@
         <div class="left">
           <h4>燕十三</h4>
           <p>剑气纵横三万里，一剑光寒十九洲。</p>
-          <el-button type="primary"><router-link to= '/about'>About Me</router-link></el-button>
+          <router-link to= '/about'><el-button type="primary">About Me</el-button></router-link>
         </div>
         <div class="center">
           <div class="link">相关链接</div>
           <div class="link-item">
             <ul>
-              <li><router-link to= ''><i class= 'el-icon-eleme'></i>博文</router-link></li>
+              <li><router-link to= '/artice/0'><i class= 'el-icon-eleme'></i>博文</router-link></li>
               <li><router-link to= ''><i class= 'el-icon-eleme'></i>资源</router-link></li>
               <li><router-link to= ''><i class= 'el-icon-eleme'></i>归档</router-link></li>
-              <li><router-link to= ''><i class= 'el-icon-eleme'></i>留言</router-link></li>
-              <li><router-link to= ''><i class= 'el-icon-eleme'></i>日记</router-link></li>
+              <li><router-link to= '/message'><i class= 'el-icon-eleme'></i>留言</router-link></li>
+              <li><router-link to= '/diary'><i class= 'el-icon-eleme'></i>日记</router-link></li>
             </ul>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default {
         let scrollHeight = document.documentElement.scrollHeight;
         [].forEach.call(loadDom, function(item) {
           // console.log(item,getHeight(item));
-          if(scroll + windowHeight >= getHeight(item) + 50) {
+          if(scroll + windowHeight >= getHeight(item) + 90) {
             // console.log(scroll + windowHeight)
             // console.log(getHeight(item))
             // console.log('到达')
@@ -209,9 +209,9 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
   },
   activated() {
+    document.documentElement.scrollTop = 0;
     this.navHover = false;
     this.reachBottom = false;
-    document.documentElement.scrollTop = 0;
     // console.log(1)
   },
   disactivated() {
@@ -415,7 +415,7 @@ export default {
     .hot-article {
       width: 100%;
       background-color: #fff;
-      padding: 120px 0;
+      padding: 50px 0 120px 0;
       text-align: center;
       color: #000;
       
@@ -544,7 +544,7 @@ export default {
       }
       .page-loading {
         width: 100%;
-        height: 40px;
+        height: 100px;
         line-height: 5px;
         margin: 20px 0;
         padding: 10px 0;
@@ -603,6 +603,9 @@ export default {
           color: #fff;
           cursor: pointer;
           z-index: 3;
+          a {
+            display: block;
+          }
           &::after {
             content: '';
             position: absolute;

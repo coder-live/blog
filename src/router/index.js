@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 const Home = () => import('../views/home/Home');
 const Article = () => import('../views/article/Article');
 const Message = () => import('../views/message/Message');
+const Diary = () => import('../views/diary/Diary');
 const FriendLink = () => import('../views/friendLink/FriendLink');
 const About = () => import('../views/about/About');
 
@@ -31,6 +32,11 @@ Vue.use(VueRouter)
     component: Message
   },
   {
+    path: '/diary',
+    name: 'Diary',
+    component: Diary
+  },
+  {
     path: '/friendLink',
     name: 'FriendLink',
     component: FriendLink
@@ -43,7 +49,6 @@ Vue.use(VueRouter)
 ]
 
 const router = new VueRouter({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

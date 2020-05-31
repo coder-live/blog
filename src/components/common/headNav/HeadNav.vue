@@ -79,6 +79,10 @@ export default {
           path: '/message'
         },
         {
+          name: '日记',
+          path: '/diary'
+        },
+        {
           name: '友链',
           path: '/friendLink'
         },
