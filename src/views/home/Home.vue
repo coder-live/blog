@@ -694,7 +694,7 @@ export default {
         }
         .center {
           flex: 1;
-          transition: top .3s .25s;
+          transition: top .3s .15s;
           .link {
             margin-bottom: 10px;
             font-size: 20px;
@@ -726,7 +726,7 @@ export default {
         }
         .right {
           flex: 1;
-          transition: top .3s .35s;
+          transition: top .3s .25s;
           .call-me {
             font-size: 20px;
             font-weight: 500;

@@ -40,7 +40,7 @@
 
     <RegisterBox v-if= 'registerBoxRealVisible' 
     :isShow= 'registerBoxVisible' 
-    @finish= 'cancelRegister'/>
+    @finish= 'cancelRegister' @toLogin= 'handleLogin'/>
 
     <LoginBox v-if= 'loginBoxRealVisible'
     :isLoginShow= 'loginBoxVisible'
@@ -108,6 +108,7 @@ export default {
     }
   },
   methods: {
+
     // 头像事件
     hoverCommand( msg ) {
       if( msg === 'user' ) {
@@ -116,6 +117,7 @@ export default {
         window.localStorage.removeItem('token');
         this.$store.dispatch( 'clearMsg' );
         //console.log(2)
+        this.$router.replace('/home');
       }
     },
     //登录注册事件
@@ -127,6 +129,11 @@ export default {
       this.loginBoxRealVisible = true;
       this.loginBoxVisible = true;
     },
+    //跳转登录框
+    handleLogin() {
+      this.loginBoxRealVisible = true;
+      this.loginBoxVisible = true;
+    },
     //退出弹窗
     cancelRegister() {
       this.registerBoxRealVisible = false;
@@ -135,6 +142,7 @@ export default {
     cancelLogin() {
       this.loginBoxRealVisible = false;
       this.loginBoxVisible = false;
+      this.$router.replace('/home');
       // setTimeout(() => {
       //   window.location.reload();
       // }, 1000)

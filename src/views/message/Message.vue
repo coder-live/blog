@@ -15,18 +15,22 @@
             <div class="content" v-html='item.content'></div>
             <div class="box">
               <div class="btn" @click='handleResClick(pIndex)'>回复</div>
-              <span>{{getWholeTime(item.date)}}</span>
+              <span>{{item.date | getWholeTime}}</span>
             </div>
             <ul class="child-res">
               <li v-for='(childItem, Cindex) in item.children'>
-                <div class="photo"><img :src="childItem.user.avatar" alt=""></div>
-                <div class="name">{{childItem.user.name}}</div>
+                <div class="photo"><img :src="childItem.user.photo" alt=""></div>
+                <div class="name">{{childItem.user.user}}</div>
+                <div class="answer">回复:<span>{{childItem.resName}}</span></div>
                 <div class="content" v-html='childItem.content'></div>
-                <div class="btn" @click='handleResClick(pIndex, Cindex)'>回复</div>
+                <div class="box">
+                  <div class="btn" @click='handleResClick(pIndex, Cindex)'>回复</div>
+                  <span>{{childItem.date | getWholeTime}}</span>
+                </div>
               </li>
             </ul>
             <div class="text" v-show='resShow && currentIdex === pIndex'>
-              <textarea name="response"
+              <textarea name="response" v-model= 'reply.content'
               :placeholder="'回复:' + reply.resName" 
               rows= '3' cols= '20'
               class="response"></textarea>
@@ -34,7 +38,10 @@
             </div>
           </li>
         </ul>
-        <div class="no-more">没有更多数据了 ...</div>
+        <div class="loading" v-if= 'isCollection.loading'>加载中
+          <span>.</span> <span>.</span> <span>.</span>
+        </div>
+        <div class="no-more" v-if= 'isCollection.noData'>没有更多数据了 ...</div>
       </div>
     </div>
     <Footer/>
@@ -51,50 +58,77 @@ import LayEdit from '@/components/common/layEdit/LayEdit'
 import Footer from '@/components/content/footer/Footer'
 
 import {requestMessage} from '@/network/request'
+import {request} from '@/network/request'
 
-let requestMsg = requestMessage(5);
+const requestMsg = requestMessage(5);
 // console.log(requestMsg)
 export default {
   name: 'Message',
   data() {
     return {
+      userState: false,
       messageList: [],
       //上传回复时使用
       reply: {
-        _id: '',
+        //该条评论的id
+        comId: '',
+        //评论回复的对象
+        userId: 0,
         resName: '',
+        //评论内容
         content: '',
       },
       //用于页面功能
       resShow: false,
       indexArr: [],
       //当前点击的 父评论序号 => 显示当前 评论回复框
-      currentIdex: -1
+      currentIdex: -1,
+      //评论加载 节流
+      isCollection: {
+        loading: false,
+        noData: false,
+      }
     }
   },
-  computed: {
+  filters: {
     getWholeTime(t) {
-      return getTime(t, true)
+      // return getTime(t, true);
+      return getTime(t, true);
     } 
   },
+  // computed: {
+  //   userState() {
+  //     return this.$store.state.isLogin;
+  //   }
+  // },
   methods: {
-    //提交 评论信息
-    handleMsgCommit() {
-
+    //调用 刷新页面函数
+    reload() {
+      window.location.reload();
     },
-    //提交留言
-    handleSubmit(val) {
-     //开始提交留言      
-    },
-    //回复事件
-    handleResClick( pIndex, cIndex ) {
-      //将 回复的对象储存起来, 如果cIndex 不存在,则 只回复父级评论
-      if(cIndex !== undefined) {
-        // console.log(1)
-        this.reply.resName = this.messageList[pIndex].children[cIndex].user.name;
+    //处理是否登录
+    isLogin() {
+      if(!this.userState) {
+        this.$message({
+          type: 'info',
+          message: '请先登录~'
+        });
+        return false
       }else {
+        return true
+      }
+    },
+    //处理回复事件
+    handleResClick( pIndex, cIndex ) {
+      //将 回复的对象储存起来 
+      //存该条评论的id(因为是在该评论下的,所以 是对 => 父级而言)
+      this.reply.comId = this.messageList[pIndex]._id;
+      if(cIndex !== undefined) { //回复子集
+        // console.log(1)
+        this.reply.resName = this.messageList[pIndex].children[cIndex].user.user;
+      }else {  //只回复父级评论
         // console.log(2)
-        this.reply.resName = this.messageList[pIndex].user.name;
+        this.reply.resName = this.messageList[pIndex].user.user;
       }
       //记录当前回复框
       // console.log(this.messageList[pIndex].children[indexArr[1]].response)
@@ -118,11 +152,140 @@ export default {
         }
       }
     },
-    //网络请求 => 留言请求
+
+    //评论加载 需操作dom
+    freshScroll() {
+      let viewH = document.documentElement.clientHeight;
+      let scrollH = document.documentElement.scrollTop;
+      let wholeH = document.documentElement.scrollHeight;
+      
+      //节流
+      if(this.isCollection.loading || this.isCollection.noData ) {
+        return
+      }else {
+      // console.log(viewH + scrollH, wholeH);
+
+        if( viewH + scrollH > wholeH - 200 ) {
+          // console.log("loading")
+          this.isCollection.loading= true;
+          requestMsg()
+          .then(res => {
+            //console.log(res.data.data)
+            this.isCollection.loading= false;
+
+            if(res.data.data.length) {
+              this.messageList.push(...res.data.data);
+            }else {
+              this.isCollection.noData= true;
+            }
+          })
+          .catch(err=> {
+            console.log(err);
+            return
+          })
+        }
+      }
+    },
+    
+
+
+    // ---------------发起请求------------------------------
+
+    //提交 评论的回复信息-----------请求
+    handleMsgCommit() {
+      // console.log(222) //bug => 不能打印 console了 ,why
+      this.isLogin();
+      if(!this.reply.content) {
+        this.$message({
+          type: 'info',
+          message: '请输入内容~'
+        });
+        return
+      }
+      // console.log(this.reply)
+      request({
+        method: 'post',
+        url: '/message/resCommit',
+        data: this.reply
+      }).then(res => {
+        // console.log(res)
+        this.$message({
+          type: 'success',
+          message: '回复成功'
+        });
+        this.reload();
+        //回复成功后将 一切功能相关的值 初始化
+        this.reply.content = '';
+        this.resShow = false;
+        this.indexArr = [];
+        this.currentIdex= -1;
+      }).catch((err) => {
+        // console.log(err)
+        this.$message({
+          type: 'error',
+          message: '服务器错误,请稍后再会'
+        })
+      })
+    },
+    //提交留言 请求
+    handleSubmit(val) {
+      if(this.isLogin()) {
+        // console.log(11111);
+        // alert(1111)
+        //开始提交留言  
+        //  this.reply.userId为当前登录用户的id  
+        let content = val.trim();
+        if(!content) {
+          this.$message({
+            type: 'info',
+            message: '请输入内容~'
+          });
+          return
+        }
+        request({
+          method: 'post',
+          url: '/message/commit',
+          data: {
+            _id: this.reply.userId,
+            content
+          }
+        }).then(res => {
+          // console.log(res);
+          // if(res.data.code === 1) {
+          //   this.$message({
+          //     type: 'info',
+          //     message: res.data.msg
+          //   });
+          //   return
+          // }
+          if(res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: res.data.msg
+            });
+            this.reload();
+          }else {
+            this.$message({
+              type: "error",
+              message: res.data.msg
+            })
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '服务器错误,稍后再试~'
+          })
+        })
+      }
+      
+
+    },
+    // 留言请求
     requestMessage() {
       requestMsg().then(res => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         this.messageList = res.data.data;
+        
       }).catch(err => {
         console.log(err);
         return
@@ -136,9 +299,18 @@ export default {
   },
   created() {
     this.requestMessage();
+    //创建组件 赋予 当前登录用户的id
+    this.reply.userId = this.$store.state.userInfo.id;
+    this.userState = this.$store.state.isLogin;
   },
   mounted() {
     this.$refs.nav.currentIndex = 2;
+    //监听滚轮,加载评论
+    window.addEventListener( 'scroll', this.freshScroll );
+  },
+  destroyed() {
+    //移除滚轮事件
+    window.removeEventListener( 'scroll', this.freshScroll );
   }
 }
 </script>
@@ -150,7 +322,6 @@ export default {
     .message-box {
       width: 90%;
       margin: 80px auto 120px;
-      height: 1050px;
       .msg-block {
         display: border-box;
         width: 100%;
@@ -168,13 +339,11 @@ export default {
         }
       }
       .message-list {
-        display: border-box;
         width: 100%;
-        height: 130px;
         margin-top: 20px;
         ul {
           li {
-            padding: 20px 70px;
+            padding: 15px 70px 10px;
             position: relative;
             line-height: 1.5;
             background-color: #fff;
@@ -197,7 +366,8 @@ export default {
               color: #01aaed;
             }
             .content {
-
+              margin-top: 2px;
+              font-weight: 500;
             }
             .btn {
               display: inline-block;
@@ -210,10 +380,12 @@ export default {
               }
             }
             span {
+              color: #555;
+              font-size: 12px;
               margin-left: 10px;
             }
             .child-res li {
-              margin-top: 20px;
+              margin-top: 10px;
               border-top: 1px dotted #888; 
               .photo {
                 position: absolute;
@@ -229,9 +401,23 @@ export default {
               .name {
                 color: #01aaed;
               }
+              .answer {
+                margin-top: 5px;
+                color: #888;
+                font-size: 12px;
+                span {
+                  color: #60d;
+                }
+              }
+              .content {
+                position: absolute;
+                font-weight: 500;
+                top: 33px;
+                left: 179px;
+              }
               .btn {
                 width: 30px;
-                margin-top: 15px;
+                margin-top: 5px;
                 color: blue;
                 cursor: pointer;
                 &:hover {
@@ -259,14 +445,45 @@ export default {
             }
           }
         }
+        .loading {
+          width: 100%;
+          height: 40px;
+          line-height: 5px;
+          margin: 20px 0;
+          padding: 10px 0;
+          background-color: #fff;
+          font-size: 18px;
+          text-align: center;
+          span {
+            font-size: 50px;
+            @keyframes appeare {
+              from {opacity: 0}
+              to {opacity: 1}
+            }
+            &:nth-child(1) {
+              animation: appeare .7s infinite;
+              animation-delay:.3s;
+            }
+            &:nth-child(2) {
+              animation: appeare .7s infinite;
+              animation-delay:.5s;
+            }
+            &:nth-child(3) {
+              animation: appeare .7s infinite;
+              animation-delay:.8s;
+            }
+          }
+        }
         .no-more {
           margin-top: 20px;
           line-height: 2;
+          padding: 10px 0;
           text-align: center;
           background-color: #fff;
           font-size: 16px;
         }
       }
     }
+    
   }
 </style>

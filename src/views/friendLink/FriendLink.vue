@@ -125,9 +125,10 @@ export default {
                   }
                 }
                 .title {
-                  font-size: 18px;
+                  font-size: 16px;
                   font-weight: 500;
                   margin-left: 50px;
+                  color: #444;
                 }
               }
               .des {

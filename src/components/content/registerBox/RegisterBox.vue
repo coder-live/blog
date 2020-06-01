@@ -186,6 +186,7 @@ export default {
             data: this.registerData
           }).then(res => {
             this.registerBtnShow = false;
+            this.$emit('toLogin')
             switch (res.data.code) {
               case 0:
                 this.$message({

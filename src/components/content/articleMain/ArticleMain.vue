@@ -4,25 +4,25 @@
       <section v-for= '(item, index) in articleData'>
         <h4>
           <span class="type">【{{item.type}}】</span>
-          <a :href="item._id">{{item.title}}</a>
+          <router-link :to=" '/detail/' + item._id">{{item.title}}</router-link>
         </h4>
         <div class="time">
-          <p class="date">{{item.data | getDate}}</p>
-          <p class="my"><span class="month">{{item.data | getMonth}} 月</span>
-            <span class="year">{{item.data | getYear}}</span>
+          <p class="date">{{item.date | getDate}}</p>
+          <p class="my"><span class="month">{{item.date | getMonth}} 月</span>
+            <span class="year">{{item.date | getYear}}</span>
           </p>
         </div>
         <div class="content-text">
-          <a :href="item._id"><i></i><img :src="'http://localhost:5002'+item.surface" alt=""></a>
-          {{item.content}} {{item._id}}
+          <router-link :to=" '/detail/' + item._id"><i></i><img :src="item.surface" alt=""></router-link>
+          {{item.content}}
         </div>
         <div class="read-more">
-          <a :href="item._id">继续阅读</a>
+          <router-link :to=" '/detail/' + item._id">继续阅读</router-link>
         </div>
         <div class="foot">
           <div class="tag">
             <span class="el-icon-s-promotion"></span>
-            <a href="">{{item.tag}}</a>
+            <a>{{item.tag}}</a>
           </div>
           <div class="right">
             <span class="visit">
@@ -40,7 +40,7 @@
     <div class="loading" v-if= 'iscol.loading'>加载中
       <span>.</span> <span>.</span> <span>.</span>
     </div>
-    <div class="foot" v-if= 'iscol.noData'>到底了哦!</div>
+    <div class="foot" v-if= 'iscol.noData'>没有更多了!</div>
   </div>
 
 </template>
@@ -77,9 +77,6 @@ export default {
       return val.match(reg)[1];
     },
   },
-  computed: {
-    
-  }
 }
 </script>
 
@@ -268,7 +265,7 @@ export default {
     >.loading, .foot {
       width: 100%;
       height: 40px;
-      line-height: 5px;
+      line-height: 17px;
       margin: 20px 0;
       padding: 10px 0;
       background-color: #fff;

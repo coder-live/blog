@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <ArticleMain :articleData= 'allContent' :iscol= 'isCollection'/>
+    <ArticleMain 
+    v-show= 'show'
+    :articleData= 'allContent' 
+    :iscol= 'isCollection'/>
     <div class="aside">
       <div :class="['inner', {searchFix: isFixed}]">
         <div class="input">
@@ -17,7 +20,7 @@
             @click= 'tagClick(index)'
             ><router-link :to= '"/article/" + index'>{{item}}</router-link></li>
           </ul>
-          <div class="cover" :style= '{top: coverIndex * 40 + "px"}' v-if= 'tags'></div>
+          <div class="cover" :style= '{top: stayIndex * 40 + "px"}' v-if= 'tags'></div>
         </div>
       </div>
       <div class="hot-article">
@@ -25,9 +28,8 @@
         <ul>
           <li v-for= '(item, index) in title'>
             <span class="idx">{{index + 1}}</span>
-            <a :href="item._id">
-            <span>{{item.title}}</span>
-          </a></li>
+            <router-link :to=" '/detail/' + item._id"><span>{{item.title}}</span></router-link>
+          </li>
         </ul>
       </div>
       <div class="recommend">
@@ -35,9 +37,10 @@
         <ul v-if= 'recommendTitle'>
           <li v-for= '(item, index) in recommendTitle'>
             <span class="idx">{{index + 1}}</span>
-            <a :href="item._id">
-            <span>{{item.title}}</span>
-          </a></li>
+            <router-link :to=" '/detail/' + item._id">
+              <span>{{item.title}}</span>
+            </router-link>
+          </li>
         </ul>
       </div>
       <div class="visitor">
@@ -73,15 +76,18 @@ export default {
   name: 'Contain',
   data() {
     return {
-      //判断 搜索盒子 是否为fixed
+      //判断 搜索盒子 是否为fixed 制作停留事件
       isFixed: false,
       tags: [],
+      show: true,
       title: [],
+      //初始序号为0 => 用于显示停留样式的
       stayIndex: 0,
-      //初始值为 tags所停留的那个分类上
+      //组件创造出来时之后,初始值为 tags所停留的那个分类上 且滑块样式
       coverIndex: this.$route.params.id,
+      //所有文章内容
       allContent: [],
-      //节流变量
+      //页面加载内容 节流变量
       isCollection: {
         loading: false,
         noData: false,
@@ -101,27 +107,34 @@ export default {
     recommendTitle() {
       return this.title.filter((item,index) => index < 3);
     },
+    //用于监听 传入params参数的变化
     getId() {
+      //真正改变 路由id 再改变值
       return this.$route.params.id;
     }
   },
   methods: {
     //在id变化是请求数据时的 加载变化
     requestArticleFresh() {
-      this.loading = this.noData = false;
+      this.isCollection.loading = this.isCollection.noData = false;
       requestArticleMore(this.getId, false).then( res => {
+        this.isCollection.noData = !res.data.data.length ? true : false;
+        // console.log(res.data.data)
         this.allContent = res.data.data;
+   
       } );
     },
     //关于tags 的样式
     titleLeave() {
+      //鼠标移走 让所有样式 序号停留在当前 params id 的页面
       this.stayIndex = this.$route.params.id;
-      this.coverIndex = this.$route.params.id;
+      //滑块样式
+      // this.coverIndex = this.$route.params.id;
       // this.coverTop = 0;
       // console.log(this.coverIndex);
     },
     titleEnter(index) {
-      this.coverIndex = index;
+      // this.coverIndex = index;
       this.stayIndex = index;
     },
     //tags的点击分类
@@ -172,6 +185,10 @@ export default {
   watch: {
     getId() {
       this.requestArticleFresh();
+      this.show = false;
+      setTimeout(() => {
+        this.show = true;
+      },50)
       document.documentElement.scrollTop = 0;
     }
   },
@@ -202,7 +219,7 @@ export default {
     window.addEventListener( 'scroll', this.searchScorll );
 
     //监听滚轮刷新
-    window.addEventListener( 'scroll', this.freshScroll )
+    window.addEventListener( 'scroll', this.freshScroll );
 
 
     // console.log(this.allContent= requestArticle()());

@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 //懒加载路由
 const Home = () => import('../views/home/Home');
 const Article = () => import('../views/article/Article');
+const Detail = () => import('../views/detail/Detail');
 const Message = () => import('../views/message/Message');
 const Diary = () => import('../views/diary/Diary');
 const FriendLink = () => import('../views/friendLink/FriendLink');
@@ -25,6 +26,11 @@ Vue.use(VueRouter)
     path: '/article/:id',
     name: 'Article',
     component: Article
+  },
+  {
+    path: '/detail/:id',
+    name: 'Detail',
+    component: Detail
   },
   {
     path: '/message',
