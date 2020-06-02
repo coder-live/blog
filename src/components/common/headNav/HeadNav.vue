@@ -29,7 +29,7 @@
               <div class="user-name">{{userInfo.user}}</div>
             </div>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="user">个人信息</el-dropdown-item>
+              <el-dropdown-item command="user">修改头像</el-dropdown-item>
               <el-dropdown-item command="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -45,6 +45,12 @@
     <LoginBox v-if= 'loginBoxRealVisible'
     :isLoginShow= 'loginBoxVisible'
     @loginFinsh= 'cancelLogin'/>
+
+    <UploadImg
+    v-if= 'UploadRealVisible'
+    :UploadShow= 'UploadVisible'
+    @uploadFinsh= 'cancelUpload'
+    />
   </div>
   
 </template>
@@ -52,6 +58,7 @@
 <script>
 import LoginBox from '@/components/content/loginBox/LoginBox';
 import RegisterBox from '@/components/content/registerBox/RegisterBox';
+import UploadImg from '@/components/content/uploadImg/UploadImg';
 export default {
   name: 'HeadNav',
   data() {
@@ -59,9 +66,11 @@ export default {
       //是否渲染
       registerBoxRealVisible: false,
       loginBoxRealVisible: false,
+      UploadRealVisible: false,
       // 是否弹出弹窗
       registerBoxVisible: false,
       loginBoxVisible: false,
+      UploadVisible: false,
       //是否注册
       //弹窗的key值
       key: 0,
@@ -97,7 +106,8 @@ export default {
   },
   components: {
     LoginBox,
-    RegisterBox
+    RegisterBox,
+    UploadImg
   },
   computed: {
     userInfo() {
@@ -107,12 +117,19 @@ export default {
       return this.$store.state.isLogin;
     }
   },
+  // watch: {
+  //   userInfo() {
+  //     console.log(333)
+  //   }
+  // },
   methods: {
-
     // 头像事件
     hoverCommand( msg ) {
       if( msg === 'user' ) {
-        this.$router.push('/index/userInfo')
+        //弹窗 上传图片
+        // console.log(111)
+        this.UploadVisible = true;
+        this.UploadRealVisible = true;
       }else{
         window.localStorage.removeItem('token');
         this.$store.dispatch( 'clearMsg' );
@@ -120,25 +137,27 @@ export default {
         this.$router.replace('/home');
       }
     },
-    //登录注册事件
+    // 打开 注册事件
     registerTap() {
       this.registerBoxRealVisible = true;
       this.registerBoxVisible = true;
     },
+    // 打开登录
     loginTap() {
       this.loginBoxRealVisible = true;
       this.loginBoxVisible = true;
     },
-    //跳转登录框
+    // 注册成功跳转登录框
     handleLogin() {
       this.loginBoxRealVisible = true;
       this.loginBoxVisible = true;
     },
-    //退出弹窗
+    //退出弹窗 注册成功
     cancelRegister() {
       this.registerBoxRealVisible = false;
       this.registerBoxVisible = false;
     },
+    //登录 成功
     cancelLogin() {
       this.loginBoxRealVisible = false;
       this.loginBoxVisible = false;
@@ -146,6 +165,11 @@ export default {
       // setTimeout(() => {
       //   window.location.reload();
       // }, 1000)
+    },
+    // 上传 图片成功
+    cancelUpload() {
+      this.UploadRealVisible = false;
+      this.UploadVisible = false;
     },
     // navClick( index ) {
     //   this.currentIndex = index;

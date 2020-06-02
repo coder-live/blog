@@ -7,6 +7,7 @@ const TYPE = {
   SET_TOKEN : 'SET_TOKEN',
   SET_LOGIN_STATE : 'SET_LOGIN_STATE',
   REMOVE_TOKEN : 'REMOVE_TOKEN',
+  UPLOAD_AVATAR: 'UPLOAD_AVATAR'
 }
 
 const state = {
@@ -21,9 +22,13 @@ const mutations = {
   [TYPE.SET_LOGIN_STATE](state, payload) {
     state.isLogin = payload;
   },
-  [TYPE.REMOVE_TOKEN]() {
+  [TYPE.REMOVE_TOKEN](state) {
     state.userInfo = {};
     state.isLogin = false;
+  },
+  [TYPE.UPLOAD_AVATAR](state, payload) {
+    console.log(state, payload)
+    state.userInfo.photo = payload;
   }
 }
 const actions = {
@@ -35,6 +40,9 @@ const actions = {
   },
   clearMsg({commit}) {
     commit(TYPE.REMOVE_TOKEN)
+  },
+  upAvater({commit}, imgUrl) {
+    commit(TYPE.UPLOAD_AVATAR, imgUrl)
   }
 }
 

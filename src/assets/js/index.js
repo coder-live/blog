@@ -10,5 +10,5 @@ export function getTime(time, isWhole= false) {
   let mm = toTwo(t.getMinutes());
   let ss = toTwo(t.getSeconds());
 
-  return isWhole ? (YYYY + '-' +  MM + '-' +  DD + '-' + HH  + ':' + mm  + ':' + ss) : YYYY + '-' +  MM + '-' +  DD;
+  return isWhole ? (YYYY + '-' +  MM + '-' +  DD + ' ' + HH  + ':' + mm  + ':' + ss) : YYYY + '-' +  MM + '-' +  DD;
 }

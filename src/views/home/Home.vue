@@ -185,7 +185,7 @@ export default {
         this.article = data.data;
         this.pageLoad = false;
         this.articleAppear = true;
-        console.log(data.data);
+        // console.log(data.data);
       })
       .catch((err) => console.log(err));
     }

@@ -6,9 +6,11 @@
         <div class="title">
           {{articData.title}}<div class="mp3"></div>
         </div>
-        <div class="author"> 作者: <span>萧逸</span> </div>
-        <div class="visit-num">浏览量: {{articData.pv}}</div>
-        <div class="time">{{articData.date | getWholeTime}}</div>
+        <div class="tit-des">
+          <div class="author"> 作者: <span>萧逸</span> </div>
+          <div class="visit-num">浏览量: {{articData.pv}}</div>
+          <div class="time">{{articData.date | getWholeTime}}</div>
+        </div>
       </div>
       <div class="content">
         <div class="text">{{articData.content}}</div>
@@ -21,7 +23,10 @@
       <div class="more">
         <div class="read">更多文章</div>
         <ul>
-          <li v-for= 'item in moreTit' :key= 'item.title'>{{item.title}}</li>
+          <li v-for= 'item in moreTit' :key= 'item.title'>
+            <span class="el-icon-link"></span>
+            <router-link :to= "'/detail' + item._id">{{item.title}}</router-link>
+          </li>
         </ul>
       </div>
       <div class="share">分享</div>
@@ -173,39 +178,49 @@ export default {
     overflow: hidden;
     padding-bottom: 80px;
     width: 100%;
-    height: 1000px;
     .container {
       width: 90%;
-      height: 500px;
       margin: 80px auto;
-      
       background-color: #fff;
       .head {
-        display: flex;
-        padding: 30px 30px 10px;
+        padding: 30px 30px 0px;
         color: #555;
         .title {
           font-size: 18px;
           line-height: 18px;
         }
-        .author {
-          span {
-            color: skyblue;
+        .tit-des {
+          display: flex;
+          font-size: 12px;
+          height: 30px;
+          margin: 5px 0;
+          line-height: 30px;
+          .author {
+            margin-right: 10px;
+            span {
+              color: skyblue;
+            }
+          }
+          .visit-num, .time {
+            margin: 0 5px;
           }
         }
-        .visit-num, .time {
-          margin: 0 5px;
-        }
+        
       }
       .content {
-        padding: 0 30px 30px;
+        padding: 0 30px 10px;
         .text {
+          font-szie: 14px;
+          color: #666;
+          padding: 30px 0;
+          line-height: 2;
+          letter-spacing: .8px;
           border-top: 1px solid #666;
         }
         .des {
           padding: 30px;
           line-height: 1.8;
-          background-color: #999;
+          background-color: #eee;
           color: #222;
           span.col, a {
             color: skyblue;
@@ -213,50 +228,54 @@ export default {
         }
       }
       .more {
-        padding: 30px;
+        padding: 0 30px;
         .read {
-          position: relative;
-          height: 45px;
-          line-height: 45px;
-          font-size: 18px;
-          margin-left: 10px;
-          &:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 2px;
-            height: 45px;
-          }
+          margin: 20px 0;
+          border-left: 3px solid #6bc30d;
+          min-height: 26px;
+          line-height: 26px;
+          padding: 5px 20px;
+          background-color: #f8f9f7;
+          font-size: 16px;
+          font-weight: 400;
+          color: #585957;
+          text-shadow: 0 1px 0 rgba(255,255,255,.5);
         }
         ul li {
-          color: skyblue;
           margin: 10px;
+          a {
+            margin-left: 15px;
+            color: skyblue;
+            padding-bottom: 15px;
+            font-size: 14px;
+            cursor: pointer;
+          }
         }
       }
       .share {
-
+        height: 40px;
+        background-color: #eee;
+        padding: 0 30px;
       }
       .comment {
         position: relative;
         width: 100%;
         background-color: #fff;
         border-top: 1px solid #666;
+        padding: 15px;
         .com-t {
-          &:after {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: #eee;
-          }
+          padding: 0 15px;
           p {
-            width: 100px;
-            font-size: 20px;
-            line-height: 1.5;
-            background-color: #fff;
+            margin: 20px 0;
+            border-left: 3px solid #6bc30d;
+            min-height: 26px;
+            line-height: 26px;
+            padding: 5px 20px;
+            background-color: #f8f9f7;
+            font-size: 16px;
+            font-weight: 400;
+            color: #585957;
+            text-shadow: 0 1px 0 rgba(255,255,255,.5);
           }
         }
         .com-list {
@@ -407,6 +426,5 @@ export default {
         }
       }
     }
-    
   }
 </style>

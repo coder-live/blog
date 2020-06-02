@@ -113,7 +113,7 @@ export default {
                 const decode = jwtDecode(token);
                 //异步改变vuex状态
                 // //console.log(hasToken,decode);
-
+                // console.log(decode)
                 this.$store.dispatch( 'saveLoginState', hasToken );
                 this.$store.dispatch( 'saveToken', decode );
 

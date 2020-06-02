@@ -46,18 +46,7 @@
       <div class="visitor">
         <h4>最近访客</h4>
         <ul>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
-          <li><a href=""><span>是都不是吧</span></a></li>
+          <li v-for= 'item in visitors'><a href=""><span>是都不是吧</span></a></li>
         </ul>
       </div>
     </div>
@@ -91,7 +80,8 @@ export default {
       isCollection: {
         loading: false,
         noData: false,
-      }
+      },
+      visitors: []
     }
   },
   components: {
@@ -114,16 +104,6 @@ export default {
     }
   },
   methods: {
-    //在id变化是请求数据时的 加载变化
-    requestArticleFresh() {
-      this.isCollection.loading = this.isCollection.noData = false;
-      requestArticleMore(this.getId, false).then( res => {
-        this.isCollection.noData = !res.data.data.length ? true : false;
-        // console.log(res.data.data)
-        this.allContent = res.data.data;
-   
-      } );
-    },
     //关于tags 的样式
     titleLeave() {
       //鼠标移走 让所有样式 序号停留在当前 params id 的页面
@@ -147,7 +127,9 @@ export default {
       // console.log(scrollTop);
       this.isFixed = scrollTop > 900;
     },
-    //监听滚轮事件,底部刷新
+    // ---------------网络请求-----------------------
+
+    //监听滚轮事件,底部刷新---> 滚轮触发
     freshScroll() {
       let viewH = document.documentElement.clientHeight;
       let scrollH = document.documentElement.scrollTop;
@@ -179,6 +161,50 @@ export default {
           })
         }
       }
+    },
+    //在id变化是请求数据时的 加载变化
+    requestArticleFresh() {
+      this.isCollection.loading = this.isCollection.noData = false;
+      requestArticleMore(this.getId, false).then( res => {
+        this.isCollection.noData = !res.data.data.length ? true : false;
+        // console.log(res.data.data)
+        this.allContent = res.data.data;
+   
+      } );
+    },
+    //请求页面文章tags
+    requestTags() {
+      request({
+        url: '/article/pageInfo',
+        method: 'post'
+      }).then( ({data}) => {
+        this.tags= data.data.tags;
+        //console.log(this.tags);
+      } )
+      .catch( (err) => console.log(err) );
+    },
+    //请求热门文章标题
+    requestArticleTitle() {
+      request({
+        url: '/article/title',
+        method: 'post'
+      })
+      .then(({data}) => {
+        this.title = data.data;
+        //console.log(data);
+      })
+      .catch((err) => console.log(err));
+    },
+    requestVisitor() {
+      request({
+        url: '/visitor',
+        method: 'post',
+      }).then(res => {
+        console.log(res)
+        // this.visitors = res.data.data;
+      }).catch((err) => {
+        console.log(err);
+      })
     }
   },
 
@@ -193,26 +219,9 @@ export default {
     }
   },
   created() {
-    //请求页面文章tags
-    request({
-      url: '/article/pageInfo',
-      method: 'post'
-    }).then( ({data}) => {
-      this.tags= data.data.tags;
-      //console.log(this.tags);
-    } )
-    .catch( (err) => console.log(err) );
-
-    //请求热门文章标题
-    request({
-      url: '/article/title',
-      method: 'post'
-    })
-    .then(({data}) => {
-      this.title = data.data;
-      //console.log(data);
-    })
-    .catch((err) => console.log(err));
+    this.requestTags();
+    this.requestArticleTitle();
+    this.requestVisitor();
   },
   mounted() {
     // 固定栏的滚轮监听
@@ -220,7 +229,6 @@ export default {
 
     //监听滚轮刷新
     window.addEventListener( 'scroll', this.freshScroll );
-
 
     // console.log(this.allContent= requestArticle()());
     //组件挂载完成 通过id 分别请求tags 的数据
