@@ -267,7 +267,6 @@ export default {
       height: 40px;
       line-height: 17px;
       margin: 20px 0;
-      padding: 10px 0;
       background-color: #fff;
       font-size: 18px;
       text-align: center;

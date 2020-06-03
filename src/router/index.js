@@ -9,6 +9,7 @@ const Message = () => import('../views/message/Message');
 const Diary = () => import('../views/diary/Diary');
 const FriendLink = () => import('../views/friendLink/FriendLink');
 const About = () => import('../views/about/About');
+const NotFound = () => import('../views/notFound/NotFound');
 
 Vue.use(VueRouter)
 
@@ -51,6 +52,11 @@ Vue.use(VueRouter)
     path: '/about',
     name: 'About',
     component: About
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    component: NotFound
   },
 ]
 

@@ -25,11 +25,11 @@
         <ul>
           <li v-for= 'item in moreTit' :key= 'item.title'>
             <span class="el-icon-link"></span>
-            <router-link :to= "'/detail' + item._id">{{item.title}}</router-link>
+            <router-link :to= "'/detail/' + item._id">{{item.title}}</router-link>
           </li>
         </ul>
       </div>
-      <div class="share">分享</div>
+      <div class="share">分享 : <span>暂未开发</span></div>
       <div class="comment">
         <div class="com-t"><p>发表评论</p></div>
         <LayEdit @sub='handleSubmit'/>
@@ -82,8 +82,11 @@ import LayEdit from '@/components/common/layEdit/LayEdit';
 import Footer from '@/components/content/footer/Footer';
 
 import {request} from '@/network/request';
+import {requestMessage} from '@/network/request';
 
 import {getTime} from '@/assets/js'; 
+
+const requestMsg = requestMessage(5);
 
 export default {
   name: 'Detail',
@@ -92,6 +95,7 @@ export default {
       articData: [],
       moreTit: [],
       commentList: [],
+      userState: false,
       reply: {
         //该条评论的id
         comId: '',
@@ -121,7 +125,7 @@ export default {
   computed: {
     artId() {
       return this.$route.params.id;
-    }
+    },
   },
   filters: {
     getWholeTime(t) {
@@ -130,6 +134,94 @@ export default {
     } 
   },
   methods: {
+    
+    //调用 刷新页面函数
+    reload() {
+      window.location.reload();
+    },
+    //处理是否登录
+    isLogin() {
+      if(!this.userState) {
+        this.$message({
+          type: 'info',
+          message: '请先登录~'
+        });
+        return false
+      }else {
+        return true
+      }
+    },
+    //处理回复事件
+    handleResClick( pIndex, cIndex ) {
+      //将 回复的对象储存起来 
+      //存该条评论的id(因为是在该评论下的,所以 是对 => 父级而言)
+      this.reply.comId = this.commentList[pIndex]._id;
+      if(cIndex !== undefined) { //回复子集
+        // console.log(1)
+        this.reply.resName = this.commentList[pIndex].children[cIndex].user.user;
+      }else {  //只回复父级评论
+        // console.log(2)
+        this.reply.resName = this.commentList[pIndex].user.user;
+      }
+      //记录当前回复框
+      // console.log(this.messageList[pIndex].children[indexArr[1]].response)
+      this.currentIdex = pIndex;
+      // console.log(pIndex, cIndex,this.currentIdex);
+      //cIndex 为 undefined,则表示 => 回复父评论 , 即
+      if(!this.indexArr) {//第一次没有序列号, 添加数组,且打开显示栏
+        this.indexArr.push(pIndex, cIndex);
+        this.resShow = true;
+      }else {
+        //表示前后两次点击 为同一个回复
+        let isTheSame = this.indexArr[0] === pIndex && this.indexArr[1] === cIndex;
+        if( isTheSame ) {
+          this.resShow = false;
+          this.indexArr.length = 0;
+        }else {
+          this.resShow = true;
+          //更新上一次点击回复 的序列组
+          this.indexArr.splice(0,1,pIndex);
+          this.indexArr.splice(1,1,cIndex);
+        }
+      }
+    },
+
+    //评论加载 需操作dom
+    freshScroll() {
+      let viewH = document.documentElement.clientHeight;
+      let scrollH = document.documentElement.scrollTop;
+      let wholeH = document.documentElement.scrollHeight;
+      
+      //节流
+      if(this.isCollection.loading || this.isCollection.noData ) {
+        return
+      }else {
+      // console.log(viewH + scrollH, wholeH);
+
+        if( viewH + scrollH > wholeH - 200 ) {
+          // console.log("loading")
+          this.isCollection.loading= true;
+          requestMsg(this.artId, '/comment')
+          .then(res => {
+            //console.log(res.data.data)
+            this.isCollection.loading= false;
+
+            if(res.data.data.length) {
+              this.commentList.push(...res.data.data);
+            }else {
+              this.isCollection.noData= true;
+            }
+          })
+          .catch(err=> {
+            console.log(err);
+            return
+          })
+        }
+      }
+    },
+
+    // ---------------发起请求------------------------------
+    
     //请求文章信息
     requestArticle() {
       request({
@@ -137,14 +229,14 @@ export default {
         method: 'post',
         data: { id: this.artId }
       }).then(res => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         this.articData = res.data.data;
       }).catch( (err) =>{
         console.log(err);
         return
       })
     },
-    //两天热门文章 标题
+    //两条热门文章 标题  -->  延伸文章
     requestMoreTit() {
       request({
         url: '/article/title',
@@ -153,22 +245,127 @@ export default {
           limit: 2
         }
       }).then(res => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         this.moreTit = res.data.data;
       }).catch(err => console.log(err))
     },
-    //评论内容 val
-    handleSubmit(val) {
 
+
+    //提交 评论的回复信息----- 评论 ------请求
+    handleMsgCommit() {
+      // console.log(222) //bug => 不能打印 console了 ,why
+      this.isLogin();
+      if(!this.reply.content) {
+        this.$message({
+          type: 'info',
+          message: '请输入内容~'
+        });
+        return
+      }
+      // console.log(this.reply)
+      request({
+        method: 'post',
+        url: '/comment/resCommit',
+        data: this.reply
+      }).then(res => {
+        // console.log(res)
+        this.$message({
+          type: 'success',
+          message: '回复成功'
+        });
+        this.reload();
+        //回复成功后将 一切功能相关的值 初始化
+        this.reply.content = '';
+        this.resShow = false;
+        this.indexArr = [];
+        this.currentIdex= -1;
+      }).catch((err) => {
+        // console.log(err)
+        this.$message({
+          type: 'error',
+          message: '服务器错误,请稍后再会'
+        })
+      })
+    },
+    //提交留言 请求 ===> 子组件发送的事件
+    handleSubmit(val) {
+      if(this.isLogin()) {
+        //  this.reply.userId为当前登录用户的id  
+        let content = val.trim();
+        if(!content) {
+          this.$message({
+            type: 'info',
+            message: '请输入内容~'
+          });
+          return
+        }
+        request({
+          method: 'post',
+          url: '/comment/commit',
+          data: {
+            artId: this.artId,
+            _id: this.reply.userId,
+            content
+          }
+        }).then(res => {
+          console.log(res)
+          if(res.data.code === 0) {
+            this.$message({
+              type: 'success',
+              message: res.data.msg
+            });
+            this.reload();
+          }else {
+            this.$message({
+              type: "error",
+              message: res.data.msg
+            })
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'error',
+            message: '服务器错误,稍后再试~'
+          })
+        })
+      }
+    },
+    // 组件创建时   =>  留言请求
+    handleRequestMessage() {
+      requestMsg(this.artId, '/comment').then(res => {
+        console.log(res);
+        this.commentList = res.data.data;
+        
+      }).catch(err => {
+        console.log(err);
+        return
+      })
+    }
+  },
+  watch: {
+    artId() {
+      document.documentElement.scrollTop = 0;
     }
   },
   created() {
+    this.handleRequestMessage();
+    //创建组件 赋予 当前登录用户的id
+    this.reply.userId = this.$store.state.userInfo.id;
+    this.userState = this.$store.state.isLogin;
+
     this.requestArticle();
     this.requestMoreTit();
+    //创建时 => 回到顶部
+    document.documentElement.scrollTop = 0;
   },
   mounted() {
     this.$refs.nav.currentIndex = 1;
     this.$refs.nav.hoverIndex = 1;
+    //监听滚轮,加载评论
+    window.addEventListener( 'scroll', this.freshScroll );
+  },
+  destroyed() {
+    //移除滚轮事件
+    window.removeEventListener( 'scroll', this.freshScroll );
   }
 }
 </script>
@@ -241,27 +438,35 @@ export default {
           color: #585957;
           text-shadow: 0 1px 0 rgba(255,255,255,.5);
         }
-        ul li {
-          margin: 10px;
-          a {
-            margin-left: 15px;
-            color: skyblue;
-            padding-bottom: 15px;
-            font-size: 14px;
-            cursor: pointer;
+        ul {
+          border-bottom: 1px solid #666;
+          li {
+            margin: 10px;
+            a {
+              margin-left: 15px;
+              color: skyblue;
+              padding-bottom: 15px;
+              font-size: 14px;
+              cursor: pointer;
+            }
           }
         }
+        
       }
       .share {
         height: 40px;
-        background-color: #eee;
+        line-height: 40px;
         padding: 0 30px;
+        span {
+          font-size: 12px;
+          font-weight: 200;
+          color: #888;
+        }
       }
       .comment {
         position: relative;
         width: 100%;
         background-color: #fff;
-        border-top: 1px solid #666;
         padding: 15px;
         .com-t {
           padding: 0 15px;
@@ -279,8 +484,8 @@ export default {
           }
         }
         .com-list {
-          width: 100%;
-          margin-top: 20px;
+          border-top: 1px solid #666;
+          margin: 0 15px;
           ul {
             li {
               padding: 15px 70px 10px;
@@ -396,9 +601,8 @@ export default {
           .loading {
             width: 100%;
             height: 40px;
-            line-height: 5px;
+            line-height: 40px;
             margin: 20px 0;
-            padding: 10px 0;
             background-color: #fff;
             font-size: 18px;
             text-align: center;

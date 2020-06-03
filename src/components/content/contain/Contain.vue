@@ -7,9 +7,22 @@
     <div class="aside">
       <div :class="['inner', {searchFix: isFixed}]">
         <div class="input">
-          <input type="text" name="search" id="search"
-          placeholder= '请输入搜索内容'>
-          <span class="el-icon-search"></span>
+          <div class="input-box">
+            <input type="text" 
+            name="search" id="search"
+            v-model= 'keyWords'
+            placeholder= '请输入搜索内容'>
+          </div>
+          <span class="el-icon-search" @click= 'handleInput'></span>
+        </div>
+        <div class="search-list" v-show= 'searchListShow'>
+          <ul class='search-ul'>
+            <li v-for= 'item in searchList'>
+              <router-link :to="'/detail/'+item._id">{{item.title}}</router-link>
+              <li @click= 'searchListShow = false'>退出</li>
+            </li>
+            
+          </ul>
         </div>
         <div class="title">
           <ul>
@@ -46,7 +59,10 @@
       <div class="visitor">
         <h4>最近访客</h4>
         <ul>
-          <li v-for= 'item in visitors'><a href=""><span>是都不是吧</span></a></li>
+          <li v-for= 'item in visitors'>
+            <a  :style= "{'background': 'url('+ item.user.photo +') center center/cover no-repeat'}"
+            ><span>{{item.user.user}}</span></a>
+          </li>
         </ul>
       </div>
     </div>
@@ -67,8 +83,13 @@ export default {
     return {
       //判断 搜索盒子 是否为fixed 制作停留事件
       isFixed: false,
+      //搜素内容得显示
+      searchListShow: false,
+      searchList: [],
       tags: [],
       show: true,
+      //搜索 值绑定
+      keyWords: '',
       title: [],
       //初始序号为0 => 用于显示停留样式的
       stayIndex: 0,
@@ -104,6 +125,7 @@ export default {
     }
   },
   methods: {
+    
     //关于tags 的样式
     titleLeave() {
       //鼠标移走 让所有样式 序号停留在当前 params id 的页面
@@ -169,9 +191,40 @@ export default {
         this.isCollection.noData = !res.data.data.length ? true : false;
         // console.log(res.data.data)
         this.allContent = res.data.data;
-   
       } );
     },
+
+    // 发送 搜素请求
+    handleInput() {
+      // console.log(666)
+      this.searchListShow = true
+      if(!this.keyWords.trim()) {
+        this.$message({
+          type: 'info',
+          message: '请输入搜索内容!'
+        });
+        return
+      }
+      request({
+        url: '/article/search',
+        method: 'post',
+        data: {
+          key: this.keyWords
+        }
+      }).then((res) => {
+        console.log(res);
+        if(res.data.data.length) {
+          this.searchList = res.data.data;
+        }else {
+          this.searchList = [{title:'没有查询数据'}];
+          console.log(this.searchList)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    },
+
     //请求页面文章tags
     requestTags() {
       request({
@@ -200,8 +253,10 @@ export default {
         url: '/visitor',
         method: 'post',
       }).then(res => {
-        console.log(res)
-        // this.visitors = res.data.data;
+        // console.log(res)
+        this.visitors = res.data.data;
+        // console.log(this.visitors)
+
       }).catch((err) => {
         console.log(err);
       })
@@ -281,19 +336,24 @@ export default {
           padding: 20px;
           background-color: grey;
           position: relative;
-          >input {
-            outline: none;
-            border: 0;
-            width: 100%;
-            height: 40px;
-            font-size: 16px;
-            padding-left: 15px;
-            color: #515250;
-            line-height: 40px;
-            border-radius: 20px;
-            background-color: #fff;
+          .input-box {
+            position: relative;
+            z-index: 10;
+            >input {
+              outline: none;
+              border: 0;
+              width: 100%;
+              height: 40px;
+              font-size: 16px;
+              padding-left: 15px;
+              color: #515250;
+              line-height: 40px;
+              border-radius: 20px;
+              background-color: #fff;
+            }
           }
           >span {
+            z-index: 10;
             position: absolute;
             right: 30px;
             top: 38%;
@@ -303,6 +363,31 @@ export default {
             color: #787977;
             &:hover {
               color: skyblue;
+            }
+          }
+        }
+        .search-list {
+          position: absolute;
+          top: 57px;
+          padding: 0px 20px;
+          width: 100%;
+          z-index: 1;
+          ul.search-ul {
+            padding: 25px;
+            background-color: #fff;
+            li {
+              cursor: pointer;
+              width: 100%;
+              height: 40px;
+              line-height: 40px;
+              a {
+                display: block;
+                font-size: 14px;
+                color: #999;;
+                &:hover {
+                  color: #000;
+                }
+              }
             }
           }
         }
@@ -442,6 +527,7 @@ export default {
                 position: absolute;
                 left: 0;
                 bottom: 0;
+                width: 100%;
                 height: 20px;
                 line-height: 20px;
                 font-size: 12px;

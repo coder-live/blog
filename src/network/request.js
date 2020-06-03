@@ -97,14 +97,22 @@ export function requestMessage(lmt) {
     withCredentials: true
   });
   // return instance(config);
-  let skip = 0;
+  let skip = -5;
   let limit = lmt || 5;
-  return function() {
-    skip += limit;
+  // console.log(999)
+  // console.log(skip)
+  return function( id, postUrl ) {
+    // console.log(id, postUrl);
+    let artId = id ? id : 0,
+        url= postUrl ? postUrl : '/message';
+        skip += limit;
+        // console.log(skip)
+        // console.log(333)
     return instance({
-      url: '/message',
+      url,
       method: 'post',
       data: {
+        artId,
         skip,
         limit
       }

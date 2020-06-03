@@ -115,6 +115,9 @@ export default {
     },
     userLoginState() {
       return this.$store.state.isLogin;
+    },
+    router() {
+      return this.$route.path;
     }
   },
   // watch: {
@@ -161,7 +164,7 @@ export default {
     cancelLogin() {
       this.loginBoxRealVisible = false;
       this.loginBoxVisible = false;
-      this.$router.replace('/home');
+      this.$router.replace(router);
       // setTimeout(() => {
       //   window.location.reload();
       // }, 1000)
@@ -183,6 +186,7 @@ export default {
     }
   },
   created() {
+    // console.log(this.$route)
     // this.ifLogin = this.userLoginState;
     // console.log(this.ifLogin,typeof())
   }
