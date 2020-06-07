@@ -35,6 +35,7 @@ import {request} from '@/network/request';
 export default {
   name: 'LoginBox',
   data() {
+    //登录密码输入规则
     let pwdRule= (rule, value, callback) => {
       if(value) {
         if(/^[\w<>,.!|?;:'"{}@#$%()\/\-\]\[\\]{6,20}$/.test(value)) {
@@ -147,13 +148,8 @@ export default {
         }
       });
     }
-  },
-  mounted() {
-
-  },
-  destroyed() {
-
   }
+ 
 }
 </script>
 

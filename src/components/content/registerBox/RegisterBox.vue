@@ -39,15 +39,14 @@
   </div>
 
 </template>
-
 <script>
-
 
 import {request} from '@/network/request'
 
 export default {
   name: 'RegisterBox',
   data() {
+    // 密码规则,结合validator
     let password = (rule, value, callback) => {
       if(value) {
         if(/^[\w<>,.!|?;:'"{}@#$%()\/\-\]\[\\]{6,20}$/.test(value)) {
@@ -58,9 +57,10 @@ export default {
       }else {
         callback(new Error('请输入密码'));
       }
-      //当第二次输入密码时 , 调用 验证方法
+      //当第二次输入密码时 , 调用 验证方法(参数) => 第二次密码绑定的值
       this.registerData.pwds && this.$refs.registerForm.validateField('pwds');
-    }
+    };
+    // 验证密码规则
     let checkPwd = (rule, value, callback) => {
       if(value) {
         if (value !== this.registerData.pwd) {
@@ -135,6 +135,7 @@ export default {
   },
 
   methods: {
+    //弹窗右上角事件
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
@@ -218,10 +219,11 @@ export default {
     
   },
   mounted() {
+    //组件绑定后,执行 验证码请求
     this.getCode();
-    
   },
   destroyed() {
+    //组件销毁后,定时器关闭
     clearTimeout(this.refresh.time);
     // console.log('组件销毁')
   }

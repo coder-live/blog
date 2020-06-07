@@ -47,6 +47,7 @@
 
 <script>
 export default {
+  //放置所有文章的组件
   name: 'ArticleMain',
   props: {
     articleData: {
@@ -265,8 +266,8 @@ export default {
     >.loading, .foot {
       width: 100%;
       height: 40px;
-      line-height: 17px;
       margin: 20px 0;
+      padding-top: 9px;
       background-color: #fff;
       font-size: 18px;
       text-align: center;

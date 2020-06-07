@@ -23,42 +23,7 @@ export function request( config ) {
     baseURL: 'http://localhost:5002',
     withCredentials: true
   });
-  // //请求拦截
-  // instance.interceptors.request.use(
-  //   config => {
-  //     //console.log("拦截请求成功",config);
-  //     startLoading();
-  //     let token = window.localStorage.getItem('token');
-  //     if( token ) {
-  //       config.headers.Authorization= token
-  //     }
-  //     return config;
-  //   },err => Promise.reject(err)
-  // );
 
-  // //响应拦截
-  // instance.interceptors.response.use(
-  //   res => {
-  //     //console.log("拦截响应成功");
-  //     endLoading();
-  //     return res;
-  //   },err => {
-  //     endLoading();
-  //     let status = err.response.status
-  //     if( status === 401 ) {
-  //       Message.error('token失效');
-  //       window.localStorage.removeItem( 'token' );
-  //       // window.location.href = '/login'
-  //       // this.$router.replace('/login');
-  //       this.$message({
-  //         type: 'info',
-  //         message: '你的登录已过期, 请重新登录 !'
-  //       })
-  //     }
-  //     Message.error(err.response.data)
-  //     return Promise.reject(err);
-  //   }
-  // )
   return instance(config);
 }
 
@@ -73,7 +38,7 @@ export function requestArticle() {
   let limit = 5;
   return function( index= 0, ifFresh= true ) {
     // console.log(index)
-    let tag= ['', '个人日记', 'HTML5&CSS3', 'Javascript', '其它'][index]
+    let tag= ['', 'HTML5&CSS3', 'Javascript', 'vue&node', '服务器配置', '个人笔记', '其它'][index]
     skip= ifFresh ? skip + limit : 0;
     let data= {skip, limit, tag}
     // if(ifFresh) {

@@ -1,10 +1,9 @@
 <template>
   <div class= 'footer'>
     <div class="foot-bottom">
-      <p class="blog">Copyright © 2018-2020 燕十三 All Rights Reserved V.1.0.0 备案号:
-        <span class="num">刷卡缴费不能上课不能看世界杯年就开始拿</span>
+      <p class="blog">2020 littleThinker Blog by 萧逸 Template source from 燕十三 备案号:
+        <span class="num">浙ICP备20002521号-1.</span>
       </p>
-      
     </div>
   </div>
 

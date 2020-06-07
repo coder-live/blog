@@ -6,7 +6,8 @@
         <li v-for= '(item,index) in navList' 
         :class= '[{active: currentIndex == index},{active: hoverIndex == index}]'
         @mouseenter= 'navHover(index)'
-        @mouseleave= 'navLeave(index)'>
+        @mouseleave= 'navLeave(index)'
+        :key="index">
           <router-link :to= 'item.path'> {{item.name}} </router-link>
         </li>
       </ul>
@@ -18,7 +19,7 @@
           <el-button type="primary" @click= 'loginTap'>登录</el-button>
         </div>
       </div>
-      <div class="logining" v-else= 'userLoginState'>
+      <div class="logining" v-else>
        
         <div class="btn">
           <el-dropdown trigger="hover" @command= 'hoverCommand'>
@@ -295,13 +296,12 @@ export default {
         }
         .img {
           width: 40px;
-          height: 37px;
+          height: 40px;
           overflow: hidden;
           border-radius: 50%;
           img {
             width: 100%;
             height: 100%;
-            transform: scale(1.35);
           }
         }
         .user-name {

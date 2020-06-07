@@ -6,20 +6,21 @@
         <el-timeline>
 
           <el-timeline-item 
+          v-for= 'item in diaryMsg'
+          :key="item.date"
           class= 'item'
           type= 'primary'
-          timestamp="2018/4/12" 
+          :timestamp="item.date | getOrTime" 
           placement="top">
           
             <el-card class= 'item-content'>
-              <h4>更新 Github 模板</h4>
+              <h4>{{item.content}}</h4>
               <div class="img">
-                <img src="../../assets/image/1.jpg" alt=""/>
+                <img :src="item.img" alt=""/>
               </div>
-              <p>王小虎 提交于 2018/4/12 20:46</p>
+              <p>提交于 {{item.date | getWholeTime}} </p>
             </el-card>
           </el-timeline-item>
-
         </el-timeline>
       </div>
     </div>
@@ -33,6 +34,8 @@
 import HeadNav from '@/components/common/headNav/HeadNav';
 import Footer from '@/components/content/footer/Footer';
 import {request} from '@/network/request';
+import {getTime} from '@/assets/js'
+// console.log(getTime)
 export default {
   name: 'Diary',
   data() {
@@ -43,6 +46,34 @@ export default {
   components: {
     HeadNav,
     Footer
+  },
+  methods: {
+    getDairy() {
+      request({
+        url: '/other/dairy',
+        method: 'get'
+      }).then(res => {
+        // console.log(res);
+        if(res.data.code === 0) {
+          this.diaryMsg = res.data.data.length ? res.data.data : [];
+        }
+      }).catch(err => {
+        console.log(err);
+      })
+    },
+  },
+  filters: {
+    getWholeTime(t) {
+      // return getTime(t, true);
+      return getTime(t, true);
+    }, 
+    getOrTime(t) {
+      // return getTime(t, true);
+      return getTime(t);
+    } 
+  },
+  created() {
+    this.getDairy();
   },
   mounted() {
     this.$refs.nav.currentIndex = 3;
@@ -60,7 +91,6 @@ export default {
     margin: 80px auto;
     padding: 30px 100px 30px 150px;
     background-color: #fff;
-    height: 1000px;
     .block {
       /deep/.item {
         padding-bottom: 50px;
@@ -75,8 +105,11 @@ export default {
           background-color: #444;
           color: #fff;
           h4 {
-            font-size: 18px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 200;
+            opacity: .9;
+            line-height: 1.5;
+            letter-spacing: 1px;
             margin: 10px 0;
           }
           .img {

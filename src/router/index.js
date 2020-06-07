@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+
 //懒加载路由
 const Home = () => import('../views/home/Home');
 const Article = () => import('../views/article/Article');
@@ -59,6 +60,8 @@ Vue.use(VueRouter)
     component: NotFound
   },
 ]
+
+
 
 const router = new VueRouter({
   base: process.env.BASE_URL,

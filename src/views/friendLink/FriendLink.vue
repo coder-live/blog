@@ -7,27 +7,26 @@
         <div class="link-intro">
           <h3>链接申请说明</h3>
           <div class="des">
-            <p class="care"><i>经常宕机</i>  <i>不合法规</i><i>经常宕机</i><i>插边球站</i><i>原创优先</i><i>技术优先</i></p>
+            <p class="care">新人出没, 正经即行</p>
             <p>交换友链可在留言板留言.本站链接如下：</p>
-            <p>名称：燕十三</p>
-            <p>网址：https://www.yanshisan.cn</p>
-            <p>图标：https://www.yanshisan.cn/logo.png</p>
-            <p>描述：燕十三·一个人的江湖</p>
-            <p class="tip">申请提交后若无其它原因将在24小时内审核,如超过时间还未通过,请私信我.(各种额外因素)</p>
+            <p>名称：萧逸</p>
+            <p>网址：http://http://www.little-thinker.xyz</p>
+            <p>图标：http://http://www.little-thinker.xyz/logo.png</p>
+            <p>描述：萧逸. 只想安静的做个普通人</p>
+            <p class="tip">申请一般都会通过, 新人 望多多关照!</p>
           </div>
         </div>
         
       </div>
       <div class="link-items">
         <ul>
-          <li><a href="">
+          <li v-for='item in friendList' :key="item.title"><a target='_blank' :href="item.href">
             <div class="main">
-              <div class="img"><img src="../../assets/image/3.png" alt=""/></div>
-              <span class="title">网址标题</span>
+              <div class="img"><img :src="item.icon" alt=""/></div>
+              <span class="title">{{item.title}}</span>
             </div>
-            <div class="des">燕十三燕十三·一个人的江湖燕十三·一个人的江湖·一个人的江湖</div>
+            <div class="des">{{item.des}}</div>
           </a></li>
-         
         </ul>
       </div>
     </div>
@@ -40,12 +39,35 @@
 <script>
 import HeadNav from '@/components/common/headNav/HeadNav'
 import Footer from '@/components/content/footer/Footer'
+import {request} from '@/network/request';
 
 export default {
   name: 'FriendLink',
+  data() {
+    return {
+      friendList: []
+    }
+  },
   components: {
     HeadNav,
     Footer
+  },
+  methods: {
+    getFriends() {
+      request({
+        url: '/other/friends'
+      }).then(res => {
+        // console.log(res);
+        if(res.data.code === 0) {
+          this.friendList = res.data.data.length ? res.data.data : [];
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  },
+  created() {
+    this.getFriends();
   },
   mounted() {
     this.$refs.nav.currentIndex = 4;
@@ -64,7 +86,7 @@ export default {
       .svg {
         width: 100%;
         height: 250px;
-        background: url('../../assets/image/2.jpg') no-repeat center center;
+        background: url('../../assets/image/1.gif') no-repeat center center;
         background-size: 100%
       }
       .link {

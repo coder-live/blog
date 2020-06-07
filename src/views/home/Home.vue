@@ -2,8 +2,8 @@
   <div class= 'home'>
     <div class= 'bg' :style= "{height: homeHeight + 'px'}">
       <div class="content loading">
-        <h1>燕 十 三</h1>
-        <p>剑气纵横三万里,一剑光寒十九洲</p>
+        <h1>萧 逸</h1>
+        <p>世间行乐亦如此, 古来万事东流水。</p>
         <router-link to='/article/0'>
           <el-button type="primary">Enter Blog</el-button>
         </router-link>
@@ -28,8 +28,8 @@
       <div class="text loading">
         <div class="title">热门文章</div>
         <div class="description">
-          <p>很想给你写封信,告诉你这里的天气.</p>
-          <p>昨夜的那场电影,还有我的心情.</p>
+          <p>当我放下的那一刻时, 一切都不曾发生变化.</p>
+          <p>除了昨夜的那次留言, 还有我的心情.</p>
         </div>
       </div>
       <div class="page-loading" v-if= 'pageLoad'>
@@ -60,37 +60,37 @@
     </div>
     <div class="intro">
       <div class="des loading">
-        <h1>次元使者</h1>
-        <p>爱好游戏，动漫。闲来无事喜欢在一些不健康的场所虚度光阴，撸起代码就会废寝忘食。</p>
+        <h1>静之隐者</h1>
+        <p>喜爱平凡, 无忧, 安静。 可是一旦沉迷某事, 尤其玄之又玄亦或, 逻辑有趣之事, 就会忘却时间, 废寝忘食</p>
       </div>
     </div>
     <footer>
       <div class="foot-top loading">
         <div class="left">
-          <h4>燕十三</h4>
-          <p>剑气纵横三万里，一剑光寒十九洲。</p>
+          <h4>萧 逸</h4>
+          <p>世间行乐亦如此, 古来万事东流水。</p>
           <router-link to= '/about'><el-button type="primary">About Me</el-button></router-link>
         </div>
         <div class="center">
           <div class="link">相关链接</div>
           <div class="link-item">
             <ul>
-              <li><router-link to= '/artice/0'><i class= 'el-icon-eleme'></i>博文</router-link></li>
-              <li><router-link to= ''><i class= 'el-icon-eleme'></i>资源</router-link></li>
-              <li><router-link to= ''><i class= 'el-icon-eleme'></i>归档</router-link></li>
-              <li><router-link to= '/message'><i class= 'el-icon-eleme'></i>留言</router-link></li>
-              <li><router-link to= '/diary'><i class= 'el-icon-eleme'></i>日记</router-link></li>
+              <li><router-link to= '/artice/0'><i class= 'el-icon-document'></i>博文</router-link></li>
+              <li><router-link to= '/message'><i class= 'el-icon-message'></i>留言</router-link></li>
+              <li><router-link to= '/diary'><i class= 'el-icon-time'></i>日记</router-link></li>
             </ul>
           </div>
         </div>
         <div class="right">
           <div class="call-me">联系我</div>
-          <div class="mine"><i class= 'el-icon-eleme'></i>地址: 四川成都金牛区金科北路</div>
-          <div class="mine"><i class= 'el-icon-eleme'></i>QQ: 930054439</div>
-          <div class="mine"><i class= 'el-icon-eleme'></i>邮箱: 930054439@qq.com</div>
+          <div class="mine"><i class= 'el-icon-map-location'></i>地址: 浙江杭州...</div>
+          <div class="mine"><i class= 'el-icon-phone'></i>QQ: 1696698061</div>
+          <div class="mine"><i class= 'el-icon-connection'></i>邮箱: 1696698061@qq.com</div>
         </div>
       </div>
-      <div class="foot-bottom"><p class="blog">Copyright © 2018-2020 燕十三 All Rights Reserved V.1.0.0 备案号:</p></div>
+      <div class="foot-bottom"><p class="blog">2020 littleThinker Blog by 萧逸 Template source from 燕十三 备案号:
+        <span class="num">浙ICP备20002521号-1.</span>
+      </p></div>
     </footer>
   </div>
 
@@ -162,7 +162,7 @@ export default {
             item.classList.remove('loading');
           }
         })
-        if(scroll + windowHeight > scrollHeight -100) {
+        if(scroll + windowHeight > scrollHeight -80) {
           console.log('到底了');
           this.reachBottom = true;
         }
@@ -170,7 +170,16 @@ export default {
     },
     //点击页面滚动
     slideDown() {
-      document.documentElement.scrollTop = this.homeHeight;
+      let scrollTop = 0;
+      let height = window.innerHeight;
+      (function re() {
+        if(scrollTop < height) {
+          scrollTop += 38;
+          console.log(1)
+          document.documentElement.scrollTop = scrollTop;
+          window.requestAnimationFrame(re);
+        }
+      })();
     },
     //请求 热门文章内容
     requestHotArticles() {
@@ -254,6 +263,7 @@ export default {
         width: 100%;
         height: 100%;
         margin-top: 18%;
+        font-size: 18px;
         vertical-align: middle;
         text-align: center;
         z-index: 1;
@@ -737,6 +747,7 @@ export default {
             font-size: 14px;
             text-align: left;
             font-weight: 200;
+            letter-spacing: 1px;
             i {
               margin: 0 5px;
             }
@@ -754,7 +765,15 @@ export default {
           text-align: center;
           font-size: 14px;
           font-weight: 200;
+          color: #999;
+          span {
+            color: #fff;
+            font-size: 14px;
+            margin-left: 3px;
+            font-weight: 300;
+          }
         }
+        
       }
     }
   }

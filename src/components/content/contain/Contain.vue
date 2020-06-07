@@ -17,10 +17,10 @@
         </div>
         <div class="search-list" v-show= 'searchListShow'>
           <ul class='search-ul'>
-            <li v-for= 'item in searchList'>
+            <li v-for= 'item in searchList' :key="item.title">
               <router-link :to="'/detail/'+item._id">{{item.title}}</router-link>
-              <li @click= 'searchListShow = false'>退出</li>
             </li>
+            <li @click= 'searchListShow = false'>退出</li>
             
           </ul>
         </div>
@@ -31,6 +31,7 @@
             @mouseenter= "titleEnter(index)"
             @mouseleave= "titleLeave"
             @click= 'tagClick(index)'
+            :key= 'index'
             ><router-link :to= '"/article/" + index'>{{item}}</router-link></li>
           </ul>
           <div class="cover" :style= '{top: stayIndex * 40 + "px"}' v-if= 'tags'></div>
@@ -39,7 +40,7 @@
       <div class="hot-article">
         <h4>热门文章</h4>
         <ul>
-          <li v-for= '(item, index) in title'>
+          <li v-for= '(item, index) in title' :key="index">
             <span class="idx">{{index + 1}}</span>
             <router-link :to=" '/detail/' + item._id"><span>{{item.title}}</span></router-link>
           </li>
@@ -48,7 +49,7 @@
       <div class="recommend">
         <h4>置顶推荐</h4>
         <ul v-if= 'recommendTitle'>
-          <li v-for= '(item, index) in recommendTitle'>
+          <li v-for= '(item, index) in recommendTitle' :key="index">
             <span class="idx">{{index + 1}}</span>
             <router-link :to=" '/detail/' + item._id">
               <span>{{item.title}}</span>
@@ -59,7 +60,7 @@
       <div class="visitor">
         <h4>最近访客</h4>
         <ul>
-          <li v-for= 'item in visitors'>
+          <li v-for= 'item in visitors' :key="item.user.user">
             <a  :style= "{'background': 'url('+ item.user.photo +') center center/cover no-repeat'}"
             ><span>{{item.user.user}}</span></a>
           </li>
@@ -73,11 +74,14 @@
 <script>
 import ArticleMain from '../articleMain/ArticleMain'
 import {request} from '@/network/request';
+//请求文章 通过limit,skip, 滚轮加载
 import {requestArticle} from '@/network/request';
 
+//将函数用一个变量保存起来,可以下次引用内部的变量
 const requestArticleMore = requestArticle();
 
 export default {
+  //博客页面的主架构
   name: 'Contain',
   data() {
     return {
@@ -118,14 +122,13 @@ export default {
     recommendTitle() {
       return this.title.filter((item,index) => index < 3);
     },
-    //用于监听 传入params参数的变化
+    //用于监听 传入params参数的变化 /二级路由
     getId() {
       //真正改变 路由id 再改变值
       return this.$route.params.id;
     }
   },
   methods: {
-    
     //关于tags 的样式
     titleLeave() {
       //鼠标移走 让所有样式 序号停留在当前 params id 的页面
@@ -151,7 +154,7 @@ export default {
     },
     // ---------------网络请求-----------------------
 
-    //监听滚轮事件,底部刷新---> 滚轮触发
+    //监听滚轮事件,底部刷新---> 滚轮触发----> 请求文章的继续加载
     freshScroll() {
       let viewH = document.documentElement.clientHeight;
       let scrollH = document.documentElement.scrollTop;
@@ -193,7 +196,6 @@ export default {
         this.allContent = res.data.data;
       } );
     },
-
     // 发送 搜素请求
     handleInput() {
       // console.log(666)
@@ -224,14 +226,13 @@ export default {
         console.log(err);
       })
     },
-
     //请求页面文章tags
     requestTags() {
       request({
         url: '/article/pageInfo',
         method: 'post'
       }).then( ({data}) => {
-        this.tags= data.data.tags;
+        this.tags= data.data.tags || [];
         //console.log(this.tags);
       } )
       .catch( (err) => console.log(err) );
@@ -248,6 +249,7 @@ export default {
       })
       .catch((err) => console.log(err));
     },
+    //请求访客
     requestVisitor() {
       request({
         url: '/visitor',
@@ -262,7 +264,7 @@ export default {
       })
     }
   },
-
+  //监听 二级路由的变化
   watch: {
     getId() {
       this.requestArticleFresh();
@@ -279,10 +281,10 @@ export default {
     this.requestVisitor();
   },
   mounted() {
-    // 固定栏的滚轮监听
+    // 固定栏的滚轮监听 -> 监听tags 栏的固定高度显示
     window.addEventListener( 'scroll', this.searchScorll );
 
-    //监听滚轮刷新
+    //监听滚轮刷新 -> 加载文章的滚轮事件
     window.addEventListener( 'scroll', this.freshScroll );
 
     // console.log(this.allContent= requestArticle()());
