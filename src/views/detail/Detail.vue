@@ -15,9 +15,9 @@
       <div class="content">
         <div class="text">{{articData.content}}</div>
         <div class="des">
-          <p>非特殊说明，本文版权归 燕十三 所有，转载请注明出处.</p>
-          <p>本文标题: <span class="col">燕十三</span> </p>
-          <p>本文网址：<a href="https://www.yanshisan.cn/Blog/Read/12">https://www.yanshisan.cn/Blog/Read/12</a></p>
+          <p>欢迎大家互相讨教, 有事留言 ~.</p>
+          <p>互相学习 !</p>
+          <p>博客网址：<a href="http://www.little-thinker.xyz">http://www.little-thinker.xyz</a></p>
         </div>
       </div>
       <div class="more">
@@ -125,7 +125,7 @@ export default {
   computed: {
     artId() {
       return this.$route.params.id;
-    },
+    }
   },
   filters: {
     getWholeTime(t) {
@@ -287,7 +287,7 @@ export default {
         })
       })
     },
-    //提交留言 请求 ===> 子组件发送的事件
+    //提交评论 请求 ===> 子组件发送的事件
     handleSubmit(val) {
       if(this.isLogin()) {
         //  this.reply.userId为当前登录用户的id  
@@ -304,11 +304,12 @@ export default {
           url: '/comment/commit',
           data: {
             artId: this.artId,
+            artTit: this.articData.title,
             _id: this.reply.userId,
             content
           }
         }).then(res => {
-          console.log(res)
+          // console.log(res)
           if(res.data.code === 0) {
             this.$message({
               type: 'success',
@@ -332,7 +333,7 @@ export default {
     // 组件创建时   =>  留言请求
     handleRequestMessage() {
       requestMsg(this.artId, '/comment').then(res => {
-        console.log(res);
+        // console.log(res);
         this.commentList = res.data.data;
         
       }).catch(err => {

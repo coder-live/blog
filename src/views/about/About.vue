@@ -19,10 +19,10 @@
               <h4>关于本博客</h4>
               <p class= 'has-bottom'>目前初步完结于2020年6月5日。</p>
               <p>博客内容及结构：</p>
-              <p>博客的形成主要来源于 燕十三前辈(模板来源) 及 阿飞老师。</p>
-              <p>前 端: elementUi + layUi(富文本编辑器)。</p>
-              <p>后 端: express + mongoose</p>
-              <p>本站服务器为 阿里云提供的服务器ESC。</p>
+              <p>博客的完成归于 燕十三前辈(模板来源) 及 阿飞老师。</p>
+              <p>前 端: vue框架, 结合element-ui 和 lay-ui(富文本编辑器)。</p>
+              <p>后 端: express框架 结合 mongoose数据库管理</p>
+              <p>本站储存: 阿里云提供的服务器ESC。</p>
             </div>
           </li>
           <li class= 'about-item'>
@@ -32,8 +32,6 @@
               <p>博客主要还是写着玩的, 博主目前还只是位前端小萌新, 请各位多多关照啦 !</p>
             </div>
           </li>
-          
-          
         </ul>
       </div>
     </div>
@@ -63,6 +61,7 @@ export default {
     width: 100%;
     overflow: hidden;
     padding-bottom: 30px;
+    color: #666;
     .contain {
       width: 100%;
       margin-top: 50px;
@@ -95,6 +94,7 @@ export default {
             }
           }
           p {
+            margin-top: 10px;
             display: block;
             line-height: 1.5;
             font-size: 14px;

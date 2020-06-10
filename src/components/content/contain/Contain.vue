@@ -214,12 +214,12 @@ export default {
           key: this.keyWords
         }
       }).then((res) => {
-        console.log(res);
+        // console.log(res);
         if(res.data.data.length) {
           this.searchList = res.data.data;
         }else {
           this.searchList = [{title:'没有查询数据'}];
-          console.log(this.searchList)
+          // console.log(this.searchList)
         }
       })
       .catch((err) => {

@@ -21,7 +21,6 @@
           @click= 'loginMsg("loginForm")'
           :disabled= 'loginBtnShow'>立即登录</el-button>
         </el-form-item>
-       
       </el-form>
     </el-dialog>
   </div>

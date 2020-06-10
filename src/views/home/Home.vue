@@ -36,8 +36,8 @@
         加载中
         <span>.</span> <span>.</span> <span>.</span>
       </div>
-      <ul :class= "['container', {loading: !articleAppear}]" v-else= '!pageLoad'>
-        <li v-for= 'item in article'>
+      <ul :class= "['container', {loading: !articleAppear}]" v-else>
+        <li v-for= 'item in article' :key="item.title">
           <div class="img"><a href="#"><img :src="item.surface" alt=""/></a></div>
           <div class="content">
             <div class="cont-title"><a href="#">{{item.title}}</a></div>
@@ -75,7 +75,7 @@
           <div class="link">相关链接</div>
           <div class="link-item">
             <ul>
-              <li><router-link to= '/artice/0'><i class= 'el-icon-document'></i>博文</router-link></li>
+              <li><router-link to= '/article/0'><i class= 'el-icon-document'></i>博文</router-link></li>
               <li><router-link to= '/message'><i class= 'el-icon-message'></i>留言</router-link></li>
               <li><router-link to= '/diary'><i class= 'el-icon-time'></i>日记</router-link></li>
             </ul>
@@ -163,7 +163,7 @@ export default {
           }
         })
         if(scroll + windowHeight > scrollHeight -80) {
-          console.log('到底了');
+          // console.log('到底了');
           this.reachBottom = true;
         }
       }
@@ -175,7 +175,7 @@ export default {
       (function re() {
         if(scrollTop < height) {
           scrollTop += 38;
-          console.log(1)
+          // console.log(1)
           document.documentElement.scrollTop = scrollTop;
           window.requestAnimationFrame(re);
         }

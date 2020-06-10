@@ -50,7 +50,7 @@ export default {
   methods: {
     getDairy() {
       request({
-        url: '/other/dairy',
+        url: '/other/diary',
         method: 'get'
       }).then(res => {
         // console.log(res);

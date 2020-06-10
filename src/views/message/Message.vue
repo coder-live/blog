@@ -9,7 +9,7 @@
       <LayEdit @sub='handleSubmit'/>
       <div class="message-list">
         <ul>
-          <li v-for= '(item, pIndex) in messageList'>
+          <li v-for= '(item, pIndex) in messageList' :key="pIndex">
             <div class="photo"><img :src="item.user.photo" alt=""></div>
             <div class="name">{{item.user.user}}</div>
             <div class="content" v-html='item.content'></div>
@@ -18,7 +18,7 @@
               <span>{{item.date | getWholeTime}}</span>
             </div>
             <ul class="child-res">
-              <li v-for='(childItem, Cindex) in item.children'>
+              <li v-for='(childItem, Cindex) in item.children' :key="Cindex">
                 <div class="photo"><img :src="childItem.user.photo" alt=""></div>
                 <div class="name">{{childItem.user.user}}</div>
                 <div class="answer">回复:<span>{{childItem.resName}}</span></div>

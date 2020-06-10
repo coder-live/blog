@@ -165,7 +165,6 @@ export default {
     cancelLogin() {
       this.loginBoxRealVisible = false;
       this.loginBoxVisible = false;
-      this.$router.replace(router);
       // setTimeout(() => {
       //   window.location.reload();
       // }, 1000)

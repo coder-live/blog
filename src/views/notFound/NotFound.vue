@@ -1,6 +1,6 @@
 <template>
   <div class='not-found'>
-    <img src="http://localhost:5002/img/noFound.gif" alt="">
+    <img src="http://121.199.3.135:5002/img/noFound.gif" alt="">
     <div class="text">
       您搜索的内容不在此星球 
     </div>

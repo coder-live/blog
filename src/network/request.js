@@ -4,23 +4,23 @@ import {Loading,Message} from 'element-ui';
 
 axios.defaults.headers.post['Content-Type']= 'application/x-www-form-urlencoded';
 
-let loading;
-//封装loading 开始
-function startLoading() {
-  loading= Loading.service({
-    lock: true,
-    text: '正在拼命加载中!!!'
-  });
-};
-//loading结束
-function endLoading() {
-  loading.close();
-};
+// let loading;
+// //封装loading 开始
+// function startLoading() {
+//   loading= Loading.service({
+//     lock: true,
+//     text: '正在拼命加载中!!!'
+//   });
+// };
+// //loading结束
+// function endLoading() {
+//   loading.close();
+// };
 
 //总的请求
 export function request( config ) {
   const instance = axios.create({
-    baseURL: 'http://localhost:5002',
+    baseURL: 'http://121.199.3.135:5002',
     withCredentials: true
   });
 
@@ -30,7 +30,7 @@ export function request( config ) {
 //文章的主要请求 (涉及到下拉加载)
 export function requestArticle() {
   const instance = axios.create({
-    baseURL: 'http://localhost:5002',
+    baseURL: 'http://121.199.3.135:5002',
     withCredentials: true
   });
   // return instance(config);
@@ -58,7 +58,7 @@ export function requestArticle() {
 export function requestMessage(lmt) {
   // console.log(lmt)
   const instance = axios.create({
-    baseURL: 'http://localhost:5002',
+    baseURL: 'http://121.199.3.135:5002',
     withCredentials: true
   });
   // return instance(config);

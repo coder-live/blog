@@ -9,7 +9,7 @@
       
       <el-upload
         class="avatar-uploader"
-        action="http://localhost:5002/upload/avatar"
+        action="http://121.199.3.135:5002/upload/avatar"
         :show-file-list="false"
         :with-credentials ="true"
         :data= "getId"
@@ -61,14 +61,14 @@ export default {
       this.$emit('uploadFinsh');
     },
     handleAvatarSuccess(res, file) {//file为 头像上传成功返回的数据
-      console.log(file.response);
+      // console.log(file.response);
       let imgUrl = file.response.data;
       this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(imgUrl)
+      // console.log(imgUrl)
       //更改 vuex中的用户头像
       this.$store.dispatch('upAvater', imgUrl);
       setTimeout(() => {
-        console.log(1)
+        // console.log(1)
         this.cancel();
       }, 50)
     },

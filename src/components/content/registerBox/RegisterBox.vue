@@ -33,7 +33,6 @@
           @click= 'submitMsg("registerForm")'
           :disabled= 'registerBtnShow'>立即注册</el-button>
         </el-form-item>
-       
       </el-form>
     </el-dialog>
   </div>
@@ -179,8 +178,6 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.registerBtnShow = true;
-          console.log('执行请求')
-          console.log(this.registerData)
           request({
             method: 'post',
             url: '/register',

@@ -27,7 +27,7 @@ const mutations = {
     state.isLogin = false;
   },
   [TYPE.UPLOAD_AVATAR](state, payload) {
-    console.log(state, payload)
+    // console.log(state, payload)
     state.userInfo.photo = payload;
   }
 }
