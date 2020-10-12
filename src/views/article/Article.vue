@@ -3,12 +3,15 @@
     <HeadNav ref='nav'/>
     <Contain/>
     <Footer/>
+    <Up/>
   </div>
 
 </template>
 
 <script>
 import HeadNav from '@/components/common/headNav/HeadNav';
+import Up from '@/components/common/up/Up';
+
 import Footer from '@/components/content/footer/Footer';
 import Contain from '@/components/content/contain/Contain';
 export default {
@@ -16,7 +19,8 @@ export default {
   components: {
     HeadNav,
     Footer,
-    Contain
+    Contain,
+    Up
   },
   mounted() {
     this.$refs.nav.currentIndex = 1;
@@ -29,7 +33,7 @@ export default {
   .article {
     position: relative;
     width: 100%;
-    padding-bottom: 30px;
+    padding-bottom: 60px;
     overflow: hidden;
   }
 </style>

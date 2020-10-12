@@ -30,6 +30,7 @@
         </ul>
       </div>
     </div>
+    <Up/>
     <Footer/>
     
   </div>
@@ -38,6 +39,7 @@
 
 <script>
 import HeadNav from '@/components/common/headNav/HeadNav'
+import Up from '@/components/common/up/Up';
 import Footer from '@/components/content/footer/Footer'
 import {request} from '@/network/request';
 
@@ -50,6 +52,7 @@ export default {
   },
   components: {
     HeadNav,
+    Up,
     Footer
   },
   methods: {
@@ -79,7 +82,7 @@ export default {
   .friend-link {
     width: 100%;
     overflow: hidden;
-    padding-bottom: 30px;
+    padding-bottom: 50px;
     .contain {
       margin-top: 50px;
       width: 100%;
@@ -115,8 +118,9 @@ export default {
           flex-wrap: wrap;
           justify-content : space-between;
           li {
-            width: 48%; 
+            width: 24%; 
             height: 174px;
+            margin-bottom: 15px;
             background-color: #fff;
             transition: .3s;
             &:hover {
@@ -158,7 +162,7 @@ export default {
                 font-size: 14px;
                 color: #555;
                 font-weight: 350;
-                line-height: 1.5;
+                line-height: .5;
               }
             }
           }
@@ -167,4 +171,22 @@ export default {
     }
   }
   
+  @media screen and (max-width: 1000px) {
+    .friend-link {
+      .contain {
+        .link-items ul li {
+          width: 48%;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 601px) {
+    .friend-link {
+      .contain {
+        .link-items ul li {
+          width: 100%;
+        }
+      }
+    }
+  }
 </style>

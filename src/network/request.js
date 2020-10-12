@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {Loading,Message} from 'element-ui';
+// import {Loading,Message} from 'element-ui';
 
 axios.defaults.headers.post['Content-Type']= 'application/x-www-form-urlencoded';
 
@@ -20,7 +20,7 @@ axios.defaults.headers.post['Content-Type']= 'application/x-www-form-urlencoded'
 //总的请求
 export function request( config ) {
   const instance = axios.create({
-    baseURL: 'http://121.199.3.135:5002',
+    baseURL: 'http://localhost:5002',
     withCredentials: true
   });
 
@@ -30,7 +30,7 @@ export function request( config ) {
 //文章的主要请求 (涉及到下拉加载)
 export function requestArticle() {
   const instance = axios.create({
-    baseURL: 'http://121.199.3.135:5002',
+    baseURL: 'http://localhost:5002',
     withCredentials: true
   });
   // return instance(config);
@@ -58,7 +58,7 @@ export function requestArticle() {
 export function requestMessage(lmt) {
   // console.log(lmt)
   const instance = axios.create({
-    baseURL: 'http://121.199.3.135:5002',
+    baseURL: 'http://localhost:5002',
     withCredentials: true
   });
   // return instance(config);

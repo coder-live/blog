@@ -11,6 +11,7 @@
     name: 'App',
     created() {
       const token = window.localStorage.token;
+      const newPhoto = window.localStorage.newPhoto;
       if( token ) {
         const hasToken = token ? true : false;
         //解密token
@@ -19,6 +20,7 @@
         //console.log(hasToken,decode);
         this.$store.dispatch( 'saveLoginState', hasToken );
         this.$store.dispatch( 'saveToken', decode );
+        this.$store.dispatch('upAvater', newPhoto);
       }
     }
   }

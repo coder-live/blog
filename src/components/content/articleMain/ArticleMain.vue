@@ -1,7 +1,7 @@
 <template>
   <div class= 'article-main'>
     <div class="content">
-      <section v-for= '(item, index) in articleData'>
+      <section v-for= '(item, index) in articleData' :key="index">
         <h4>
           <span class="type">【{{item.type}}】</span>
           <router-link :to=" '/detail/' + item._id">{{item.title}}</router-link>
@@ -14,7 +14,7 @@
         </div>
         <div class="content-text">
           <router-link :to=" '/detail/' + item._id"><i></i><img :src="item.surface" alt=""></router-link>
-          {{item.content}}
+          <span v-html="item.content"></span>
         </div>
         <div class="read-more">
           <router-link :to=" '/detail/' + item._id">继续阅读</router-link>
@@ -40,7 +40,7 @@
     <div class="loading" v-if= 'iscol.loading'>加载中
       <span>.</span> <span>.</span> <span>.</span>
     </div>
-    <div class="foot" v-if= 'iscol.noData'>没有更多了!</div>
+    <div class="foot" v-if= 'iscol.noData'>没有更多了 !</div>
   </div>
 
 </template>
@@ -172,6 +172,7 @@ export default {
           position: relative;
           overflow: hidden;
           min-height: 200px;
+          max-height: 280px;
           z-index: 2;
           >a {
             position: relative;
@@ -265,15 +266,14 @@ export default {
     }
     >.loading, .foot {
       width: 100%;
-      height: 40px;
-      margin: 20px 0;
-      padding-top: 9px;
+      margin: 10px 0;
       background-color: #fff;
       font-size: 18px;
+      padding: 10px;
       text-align: center;
     }
     >.loading span {
-      font-size: 50px;
+      font-size: 20px;
       @keyframes appeare {
         from {opacity: 0}
         to {opacity: 1}
@@ -290,6 +290,11 @@ export default {
         animation: appeare .7s infinite;
         animation-delay:.8s;
       }
+    }
+  }
+  @media screen and (max-width: 800px) {
+    .article-main {
+      width: 100%;
     }
   }
 </style>

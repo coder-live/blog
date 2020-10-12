@@ -1,6 +1,11 @@
 <template>
   <div class= 'head-nav'>
-    <div class="fix-nav">
+    <div :class="['fix-nav', {appear}]">
+      <span class="a" @click='appear = ! appear'>
+        <i></i>
+        <i></i>
+        <i></i>
+      </span>
       <span class="log">Mr.Xy</span>
       <ul class="nav-list">
         <li v-for= '(item,index) in navList' 
@@ -20,7 +25,7 @@
         </div>
       </div>
       <div class="logining" v-else>
-       
+      
         <div class="btn">
           <el-dropdown trigger="hover" @command= 'hoverCommand'>
             <div class="el-dropdown-link">
@@ -64,6 +69,7 @@ export default {
   name: 'HeadNav',
   data() {
     return {
+      appear: false,
       //是否渲染
       registerBoxRealVisible: false,
       loginBoxRealVisible: false,
@@ -165,9 +171,9 @@ export default {
     cancelLogin() {
       this.loginBoxRealVisible = false;
       this.loginBoxVisible = false;
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 1000)
+      setTimeout(() => {
+        window.location.reload();
+      }, 500)
     },
     // 上传 图片成功
     cancelUpload() {
@@ -208,6 +214,30 @@ export default {
       height: 60px;
       margin: 0 auto;
       padding-right: 30px;
+      span.a {
+        display: none;
+        position: relative;
+        margin: 0 30px;
+        width:28px;
+        height: 28px;
+        cursor: pointer;
+        color: limegreen;
+        i {
+          position: absolute;
+          width: 100%;
+          height: 2px;
+          background-color: #333;
+          &:nth-child(1) {
+            top: 5px;
+          }
+          &:nth-child(2) {
+            top: 16px;
+          }
+          &:nth-child(3) {
+            top: 28px;
+          }
+        }
+      }
       >.log {
         padding-left: 15px;
         margin-left: 20px;
@@ -222,6 +252,7 @@ export default {
         right: 18%;
         width: 384px;
         display: flex;
+        
         >.active > a {
           color: #6bc30d;
           &::after {
@@ -231,13 +262,14 @@ export default {
             left: 50%;
             height: 2px;
             width: 90%;
-            background-color: red;
+            background-color: #6bc30d;
             transform: translateX(-47%);
           }
         }
         >li {
           flex: 1;
           height: 60px;
+          font-size: 16px;
           line-height: 60px;
           text-align: center;
           color: #222;
@@ -314,5 +346,36 @@ export default {
       }
       
     }
+  }
+  @media screen and (max-width: 650px) {
+    .head-nav {
+      width: 100%;
+      .fix-nav {
+        position: relative;
+        max-width: 100%;
+        padding-right: 0px;
+        /*控制导航栏出现 通过绑定动态class属性*/
+        &.appear {
+          overflow: inherit;
+        }
+        span.log {
+
+        }
+        span.a {
+          display: inline-block;
+        }
+        .nav-list {
+          display: block;
+          position: absolute;
+          width: 106%;
+          top: 50px;
+          right: 0%;
+          background-color: #fff;
+        }
+        
+      }
+      
+    }
+    
   }
 </style>

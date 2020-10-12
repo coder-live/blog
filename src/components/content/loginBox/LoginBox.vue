@@ -194,4 +194,13 @@ export default {
       }
     }
   }
+  @media screen and (max-width: 400px) {
+    .login-box {
+      /deep/.el-dialog__wrapper {
+        .el-dialog {
+          width: 92%!important;
+        }
+      }
+    }
+  }
 </style>

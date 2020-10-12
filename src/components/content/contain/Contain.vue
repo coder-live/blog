@@ -20,7 +20,7 @@
             <li v-for= 'item in searchList' :key="item.title">
               <router-link :to="'/detail/'+item._id">{{item.title}}</router-link>
             </li>
-            <li @click= 'searchListShow = false'>退出</li>
+            <li @click= 'turnOut'>退出</li>
             
           </ul>
         </div>
@@ -60,8 +60,8 @@
       <div class="visitor">
         <h4>最近访客</h4>
         <ul>
-          <li v-for= 'item in visitors' :key="item.user.user">
-            <a  :style= "{'background': 'url('+ item.user.photo +') center center/cover no-repeat'}"
+          <li v-for= 'item in visitors' :key="item._id">
+            <a v-if="item.user" :style= "{'background': 'url('+ item.user.photo +') center center/cover no-repeat'}"
             ><span>{{item.user.user}}</span></a>
           </li>
         </ul>
@@ -129,6 +129,11 @@ export default {
     }
   },
   methods: {
+    //退出搜素
+    turnOut() {
+      this.searchListShow = false;
+      this.keyWords = '';
+    },
     //关于tags 的样式
     titleLeave() {
       //鼠标移走 让所有样式 序号停留在当前 params id 的页面
@@ -255,8 +260,8 @@ export default {
         url: '/visitor',
         method: 'post',
       }).then(res => {
-        // console.log(res)
-        this.visitors = res.data.data;
+        console.log(res)
+        this.visitors = res.data.data ;
         // console.log(this.visitors)
 
       }).catch((err) => {
@@ -357,10 +362,10 @@ export default {
           >span {
             z-index: 10;
             position: absolute;
-            right: 30px;
+            right: 33px;
             top: 38%;
             cursor: pointer;
-            font-size: inherit;
+            font-size: 18px;
             font-weight: bolder;
             color: #787977;
             &:hover {
@@ -539,6 +544,19 @@ export default {
               }
             }
           }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 800px) {
+    .container {
+      .aside {
+        width: 100%;
+        .searchFix {
+          position: relative;
+          height: 395px;
+          margin-bottom: 99px ;
+          width: 100%;
         }
       }
     }

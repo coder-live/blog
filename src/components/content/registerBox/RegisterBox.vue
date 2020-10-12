@@ -270,4 +270,13 @@ export default {
       }
     }
   }
+  @media screen and (max-width: 400px) {
+    .register-box {
+      /deep/.el-dialog__wrapper {
+        .el-dialog {
+          width: 92%!important;
+        }
+      }
+    }
+  }
 </style>

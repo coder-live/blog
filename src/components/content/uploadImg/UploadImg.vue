@@ -9,7 +9,7 @@
       
       <el-upload
         class="avatar-uploader"
-        action="http://121.199.3.135:5002/upload/avatar"
+        action="http://localhost:5002/upload/avatar"
         :show-file-list="false"
         :with-credentials ="true"
         :data= "getId"
@@ -67,6 +67,7 @@ export default {
       // console.log(imgUrl)
       //更改 vuex中的用户头像
       this.$store.dispatch('upAvater', imgUrl);
+      window.localStorage.setItem('newPhoto', imgUrl);
       setTimeout(() => {
         // console.log(1)
         this.cancel();
@@ -112,5 +113,10 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+  }
+  @media screen and (max-width: 400px) {
+    .upload-img .el-dialog__wrapper .el-dialog {
+      width: 68%!important;
+    }
   }
 </style>

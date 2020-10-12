@@ -25,6 +25,7 @@
       </div>
     </div>
     <Footer/>
+    <Up/>
   </div>
 
 </template>
@@ -32,6 +33,8 @@
 <script>
 //后台请求数据  标题\ 内容\ 提交时间\ 图片地址\ 
 import HeadNav from '@/components/common/headNav/HeadNav';
+import Up from '@/components/common/up/Up';
+
 import Footer from '@/components/content/footer/Footer';
 import {request} from '@/network/request';
 import {getTime} from '@/assets/js'
@@ -45,7 +48,8 @@ export default {
   },
   components: {
     HeadNav,
-    Footer
+    Footer,
+    Up
   },
   methods: {
     getDairy() {
@@ -127,6 +131,41 @@ export default {
         }
       }
       
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .diary {
+      .session {
+        .block {
+          width: 150%;
+          position: relative;
+          left: -84px;
+          ul.el-timeline {
+            /deep/li.el-timeline-item {
+              .el-timeline-item__wrapper {
+                .el-timeline-item__timestamp {
+                  position: relative;
+                  left: 5px;
+                  font-size: 16px;
+                  letter-spacing: 1.5px;
+                }
+              }
+            }
+            
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 400px) {
+    .diary {
+      .session {
+        .block {
+          position: relative;
+          width: 250%;
+          left: -104px;
+        }
+      }
     }
   }
 </style>

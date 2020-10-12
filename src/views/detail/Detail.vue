@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="content">
-        <div class="text">{{articData.content}}</div>
+        <div class="text" v-html="articData.content"></div>
         <div class="des">
           <p>欢迎大家互相讨教, 有事留言 ~.</p>
           <p>互相学习 !</p>
@@ -72,12 +72,15 @@
       </div>
     </div>
     <Footer/>
+    <Up/>
   </div>
 
 </template>
 
 <script>
 import HeadNav from '@/components/common/headNav/HeadNav'; 
+import Up from '@/components/common/up/Up';
+
 import LayEdit from '@/components/common/layEdit/LayEdit';
 import Footer from '@/components/content/footer/Footer';
 
@@ -120,7 +123,8 @@ export default {
   components: {
     HeadNav,
     LayEdit,
-    Footer
+    Footer,
+    Up
   },
   computed: {
     artId() {
@@ -344,6 +348,7 @@ export default {
   },
   watch: {
     artId() {
+      window.location.reload();
       document.documentElement.scrollTop = 0;
     }
   },
@@ -389,7 +394,7 @@ export default {
         }
         .tit-des {
           display: flex;
-          font-size: 12px;
+          font-size: 13px;
           height: 30px;
           margin: 5px 0;
           line-height: 30px;
@@ -397,6 +402,7 @@ export default {
             margin-right: 10px;
             span {
               color: skyblue;
+              
             }
           }
           .visit-num, .time {
@@ -408,7 +414,7 @@ export default {
       .content {
         padding: 0 30px 10px;
         .text {
-          font-szie: 14px;
+          font-size: 14px;
           color: #666;
           padding: 30px 0;
           line-height: 2;
@@ -422,6 +428,9 @@ export default {
           color: #222;
           span.col, a {
             color: skyblue;
+            &:hover {
+              color: #409EFF;
+            }
           }
         }
       }
@@ -449,6 +458,9 @@ export default {
               padding-bottom: 15px;
               font-size: 14px;
               cursor: pointer;
+              &:hover {
+                color: #409EFF;
+              }
             }
           }
         }
@@ -583,7 +595,7 @@ export default {
                 button {
                   padding: 5px;
                   cursor: pointer;
-                  font-szie: 14px;
+                  font-size: 14px;
                   &:hover {
                     background-color: #eee;
                   }

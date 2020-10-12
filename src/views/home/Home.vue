@@ -10,7 +10,7 @@
       </div>
       <div class="downBtn" @click= 'slideDown'></div>
     </div>
-    <div class="nav-side">
+    <div class="nav-side" @touchmove.stop.prevent>
       <div @click= 'handleNavClick'
       :class="['nav-list', {hover : navHover}]"> <p></p> <p></p> <p></p> </div>
     </div>
@@ -38,16 +38,20 @@
       </div>
       <ul :class= "['container', {loading: !articleAppear}]" v-else>
         <li v-for= 'item in article' :key="item.title">
-          <div class="img"><a href="#"><img :src="item.surface" alt=""/></a></div>
+          <div class="img">
+            <router-link class= 'more' :to= "'/detail/' + item._id"><img :src="item.surface" alt=""/></router-link>
+          </div>
           <div class="content">
-            <div class="cont-title"><a href="#">{{item.title}}</a></div>
+            <div class="cont-title">
+              <router-link :to= "'/detail/' + item._id">{{item.title}}</router-link>
+            </div>
             <div class="cont-time">
               {{item.date | getYear}}年
               {{item.date | getMonth}}月
               {{item.date | getDate}}日
             </div>
-            <div class="cont-des">{{item.content}}</div>
-            <a class= 'more' href="#">阅读更多</a>
+            <div class="cont-des" v-html="item.content"></div>
+            <router-link class= 'more' :to= "'/detail/' + item._id">阅读更多</router-link>
           </div>
         </li>
       </ul>
@@ -92,12 +96,14 @@
         <span class="num">浙ICP备20002521号-1.</span>
       </p></div>
     </footer>
+    <Up/>
   </div>
 
 </template>
 
 <script>
 
+import Up from '@/components/common/up/Up';
 import {request} from '@/network/request';
 
 const getHeight = function(node) {
@@ -121,6 +127,7 @@ export default {
     }
   },
   components: {
+    Up
   },
   filters: {
     getDate(val) {
@@ -424,10 +431,11 @@ export default {
         background-color: #eee;
       }
     }
+    
     .hot-article {
       width: 100%;
       background-color: #fff;
-      padding: 50px 0 120px 0;
+      padding: 80px 0;
       text-align: center;
       color: #000;
       
@@ -470,7 +478,6 @@ export default {
       .container {
         display: flex;
         width: 100%;
-        height: 450px;
         padding: 0 10px;
         margin-top: 10px;
         justify-content: space-between;
@@ -480,7 +487,7 @@ export default {
         li {
           position: relative;
           top: 0;
-          flex: 1;
+          width: 33.3%;
           height: 420px;
           margin: 10px 15px;
           &:nth-child(1) {
@@ -494,6 +501,8 @@ export default {
           }
           .img {
             width: 100%;
+            height: 250px;
+            margin-bottom: 10px;
             a {
               width: 100%;
               img {
@@ -502,15 +511,18 @@ export default {
             }
           }
           .content {
+            width: 100%;
             position: relative;
-            background-color: rgb(250, 249, 249);
-            padding: 30px 15px;
-            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            margin-top: 5px;
+            padding: 20px 15px;
             .cont-title {
-              margin-bottom: 10px;
+              margin-bottom: 15px;
               a {
                 display: inline-block;
-                color: #000;
+                font-size: 16px;
+                color: #333;
+                font-weight: 520;
                 text-decoration: none;
                 border: none;
                 &:hover {
@@ -530,8 +542,9 @@ export default {
               height: 45px;
               line-height: 1.5;
               margin: 0 auto;
-              font-size: 16px;
-              color: #888;
+              font-size: 14px;
+              color: #7b7b7b;
+              text-align: left;
 
               -webkit-line-clamp: 2;
               -webkit-box-orient: vertical;
@@ -540,7 +553,7 @@ export default {
             a.more {
               display: block;
               text-align: left;
-              margin-top: 15px;
+              margin-top: 5px;
               padding: 0;
               background: 0 0;
               border: none;
@@ -593,6 +606,17 @@ export default {
       background-position: center;
       background-attachment: fixed;
       background-repeat: no-repeat;
+      &::before {
+        content: ' ';
+        position: fixed;
+        z-index: -1;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: url('../../assets/image/home_item1.png') center 0 no-repeat;
+        background-size: cover;
+      }
       .session-mid {
         position: relative;
         display: flex;
@@ -617,6 +641,9 @@ export default {
           z-index: 3;
           a {
             display: block;
+            &:hover {
+              color: #fff;
+            }
           }
           &::after {
             content: '';
@@ -631,7 +658,7 @@ export default {
           }
           &:hover::after {
             width: 100%;
-            background-color: #1c51ba;
+            background-color: royalblue;
           }
         }
       }
@@ -774,6 +801,135 @@ export default {
           }
         }
         
+      }
+    }
+  }
+  @media only screen and (max-width: 1100px) {
+    .home {
+      width: 100%;
+      position: relative;
+      .maskActive::before {
+        right: -47%;
+      }
+      .hot-article {
+        padding-bottom: 0;
+        .container {
+          max-height: 450px;
+          li {
+            width: 27.3%!important;
+            .img {
+              height: 180px;
+            }
+          }
+        }
+      }
+      .session .session-mid {
+        display: block;
+        margin-top: 60px;
+        width: 240px;
+        .about {
+          margin-bottom: 20px;
+        }
+      }
+      .intro .des {
+        width: 350px;
+      }
+      footer {
+        padding: 10px;
+        height: 255px;
+        .foot-top {
+          margin-top: 0;
+          .left {
+            width: 30%;
+          }
+          .right {
+            width: 40%;
+            .mine {
+              &:nth-child(4) {
+                position: relative;
+                left: -30px;
+              }
+          }
+          }
+          .center {
+            width: 30%;
+            .link-item {
+              margin-top: 50px;
+            }
+          }
+        }
+        .foot-bottom {
+          padding: 10px;
+          
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 880px) {
+    .home {
+      .hot-article {
+        .container {
+          max-height: 360px;
+          li {
+            width: 31.3%!important;
+            .img {
+              height: 150px;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 780px) {
+    .home {
+      .hot-article {
+        .container {
+          max-height: 330px;
+          li {
+            width: 26.3%!important;
+            .img {
+              height: 120px;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 680px) {
+    .home {
+      .hot-article {
+        .container {
+          max-height: 340px;
+          li {
+            .img {
+              height: 100px;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 400px) {
+    .home {
+      .hot-article {
+        .container {
+          max-height: 340px;
+          li {
+            .img {
+              height: 100px;
+            }
+            .content {
+              .cont-title a {
+                width: 70px;
+                font-size: 12px;
+              }
+              .cont-des {
+                height: 52px;
+                font-size: 12px;
+              }
+            }
+          }
+        }
       }
     }
   }

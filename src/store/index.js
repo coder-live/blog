@@ -28,7 +28,9 @@ const mutations = {
   },
   [TYPE.UPLOAD_AVATAR](state, payload) {
     // console.log(state, payload)
-    state.userInfo.photo = payload;
+    if (payload) {
+      state.userInfo.photo = payload;
+    }
   }
 }
 const actions = {

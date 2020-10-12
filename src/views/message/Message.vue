@@ -10,7 +10,8 @@
       <div class="message-list">
         <ul>
           <li v-for= '(item, pIndex) in messageList' :key="pIndex">
-            <div class="photo"><img :src="item.user.photo" alt=""></div>
+            <div v-if="item.user">
+              <div class="photo"><img :src="item.user.photo" alt=""></div>
             <div class="name">{{item.user.user}}</div>
             <div class="content" v-html='item.content'></div>
             <div class="box">
@@ -36,6 +37,7 @@
               class="response"></textarea>
               <button @click='handleMsgCommit'>提交回复</button>
             </div>
+            </div>
           </li>
         </ul>
         <div class="loading" v-if= 'isCollection.loading'>加载中
@@ -45,6 +47,7 @@
       </div>
     </div>
     <Footer/>
+    <Up/>
   </div>
 
 </template>
@@ -54,6 +57,8 @@
 import {getTime} from '@/assets/js';
 
 import HeadNav from '@/components/common/headNav/HeadNav'
+import Up from '@/components/common/up/Up'
+
 import LayEdit from '@/components/common/layEdit/LayEdit'
 import Footer from '@/components/content/footer/Footer'
 
@@ -281,7 +286,7 @@ export default {
     // 留言请求
     requestMessage() {
       requestMsg().then(res => {
-        // console.log(res.data.data);
+        console.log(res.data.data);
         this.messageList = res.data.data;
         
       }).catch(err => {
@@ -293,7 +298,8 @@ export default {
   components: {
     HeadNav,
     LayEdit,
-    Footer
+    Footer,
+    Up
   },
   created() {
     this.requestMessage();
@@ -435,7 +441,7 @@ export default {
               button {
                 padding: 5px;
                 cursor: pointer;
-                font-szie: 14px;
+                font-size: 14px;
                 &:hover {
                   background-color: #eee;
                 }
