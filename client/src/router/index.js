@@ -12,6 +12,8 @@ const FriendLink = () => import('../views/friendLink/FriendLink');
 const About = () => import('../views/about/About');
 const NotFound = () => import('../views/notFound/NotFound');
 
+const Test = () => import('../views/test');
+
 Vue.use(VueRouter)
 
   const routes = [
@@ -60,6 +62,12 @@ Vue.use(VueRouter)
     name: 'About',
     component: About,
     meta: ['萧逸-关于']
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    component: Test,
+    meta: ['萧逸-测试路由']
   },
   {
     path: '*',

@@ -1,4 +1,6 @@
 @import "./normalize.css";
+@import "./marked.css";
+@import "./highlight.css";
 
 /*:root -> 获取根元素html*/
 :root {

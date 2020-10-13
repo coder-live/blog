@@ -1,7 +1,7 @@
 <template>
   <div class= 'article-main'>
     <div class="content">
-      <section v-for= '(item, index) in articleData' :key="index">
+      <section v-for= '(item, index) in articleDataList' :key="index">
         <h4>
           <span class="type">【{{item.type}}】</span>
           <router-link :to=" '/detail/' + item._id">{{item.title}}</router-link>
@@ -14,7 +14,7 @@
         </div>
         <div class="content-text">
           <router-link :to=" '/detail/' + item._id"><i></i><img :src="item.surface" alt=""></router-link>
-          <span v-html="item.content"></span>
+          <div v-html="item.content"></div>
         </div>
         <div class="read-more">
           <router-link :to=" '/detail/' + item._id">继续阅读</router-link>
@@ -46,9 +46,23 @@
 </template>
 
 <script>
+
+import marked                                       from 'marked'
+import hljs                                         from 'highlight.js'
+
+marked.setOptions({
+    highlight: function (code) {
+        return hljs.highlightAuto(code).value
+    },
+    sanitize: true
+})
+
+const renderer = new marked.Renderer()
+
 export default {
   //放置所有文章的组件
   name: 'ArticleMain',
+  
   props: {
     articleData: {
       type: Array,
@@ -77,7 +91,29 @@ export default {
       let reg= /^(\d{4})-(\d{1,2})-(\d{1,2})/;
       return val.match(reg)[1];
     },
+    // toHtml(val) {
+    //   return marked(val, { renderer: renderer })
+    // }
   },
+  computed: {
+    articleDataList() {
+      let articleDataList = this.articleData.map(item => {
+        let content = marked(item.content, { renderer: renderer });
+        item.content = content;
+        return item
+      });
+      return articleDataList
+    }
+  },
+  mounted() {
+    // console.log(this.articleData)
+    // this.articleDataList = this.articleData.map(item => {
+    //   let content = marked(item.content, { renderer: renderer });
+    //   item.content = content;
+    //   return item
+    // });
+    // console.log(this.articleDataList)
+  }
 }
 </script>
 
@@ -162,6 +198,8 @@ export default {
           }
         }
         >.content-text {
+          display: flex;
+          align-content: center;
           margin: 10px 20px;
           padding: 5px;
           font-size: 14px;
@@ -184,6 +222,7 @@ export default {
             overflow: hidden;
             float: left;
             margin-right: 20px;
+            /* margin-top: 20px; */
             i {
               position: absolute;
               top: 0;
@@ -202,6 +241,9 @@ export default {
               height: 100%;
             }
 
+          }
+          div {
+            flex: 50%;
           }
         }
         >.read-more {

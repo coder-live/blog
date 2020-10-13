@@ -55,7 +55,7 @@ h1 {
 
 hr {
   box-sizing: content-box; /* 1 */
-  height: 0; /* 1 */
+  /* height: 0; 1 */
   overflow: visible; /* 2 */
 }
 
@@ -64,10 +64,13 @@ hr {
  * 2. Correct the odd `em` font sizing in all browsers.
  */
 
-pre {
-  font-family: monospace, monospace; /* 1 */
-  font-size: 1em; /* 2 */
-}
+/* pre {
+  padding: 0.625rem 0.625rem;
+    background: rgb(246, 248, 250);
+    border-radius: 0.3125rem;
+    margin: 10px 0;
+    overflow-x: auto;
+} */
 
 /* Text-level semantics
    ========================================================================== */

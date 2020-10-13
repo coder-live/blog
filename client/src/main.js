@@ -8,6 +8,8 @@ import store from './store'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css' 
 
+// import 'highlight.js/styles/vs.css'
+
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);

@@ -8,10 +8,10 @@
           <li class= 'about-item'>
             <div class="about-sth">
               <h4>关于我</h4>
-              <p class= 'has-bottom'>毕业于2020年6月中旬, 都快毕业了, 还是待就业状态, 希望有人来领走我。</p>
+              <p class= 'has-bottom'>毕业于2020年, 自己选择了前端这条路, 那就要走下去</p>
               <p>知晓我的途径：</p>
               <p>邮 箱 ：1696698061@qq.com</p>
-              <p>Github ：<a href='https://github.com/coder-live'>https://github.com/coder-live</a></p>
+              <p>Github ：<a href='https://github.com/coder-live'>点击此处</a></p>
             </div>
           </li>
           <li class= 'about-item'>
@@ -19,7 +19,7 @@
               <h4>关于本博客</h4>
               <p class= 'has-bottom'>目前初步完结于2020年6月5日。</p>
               <p>博客内容及结构：</p>
-              <p>博客的完成归于 燕十三前辈(模板来源) 及 阿飞老师。</p>
+              <!-- <p>博客的完成归于 燕十三(模板来源) 及 阿飞老师。</p> -->
               <p>前 端: vue框架, 结合element-ui 和 lay-ui(富文本编辑器)。</p>
               <p>后 端: express框架 结合 mongoose数据库管理</p>
               <p>本站储存: 阿里云提供的服务器ESC。</p>
@@ -28,8 +28,8 @@
           <li class= 'about-item'>
             <div class="about-sth">
               <h4>关于其他说明</h4>
-              <p class= 'has-bottom'>因为初次写博客, 若有什么侵犯行为, 请私信于我。</p>
-              <p>博客主要还是写着玩的, 博主目前还只是位前端小萌新, 请各位多多关照啦 !</p>
+              <p class= 'has-bottom'>初次搭建博客, 有问题, 请私信。</p>
+              <!-- <p>博客主要还是写着玩的, 博主目前还只是位前端小萌新, 请各位多多关照啦 !</p> -->
             </div>
           </li>
         </ul>

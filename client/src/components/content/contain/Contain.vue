@@ -250,7 +250,7 @@ export default {
       })
       .then(({data}) => {
         this.title = data.data;
-        //console.log(data);
+        console.log(data);
       })
       .catch((err) => console.log(err));
     },

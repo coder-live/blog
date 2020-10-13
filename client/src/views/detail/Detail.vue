@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="content">
-        <div class="text" v-html="articData.content"></div>
+        <div class="text" v-html="mdHtml"></div>
         <div class="des">
           <p>欢迎大家互相讨教, 有事留言 ~.</p>
           <p>互相学习 !</p>
@@ -67,7 +67,7 @@
           <div class="loading" v-if= 'isCollection.loading'>加载中
             <span>.</span> <span>.</span> <span>.</span>
           </div>
-          <div class="no-more" v-if= 'isCollection.noData'>没有更多数据了 ...</div>
+          <div class="no-more" v-if= 'isCollection.noData'>没有更多数据了 ---</div>
         </div>
       </div>
     </div>
@@ -89,13 +89,30 @@ import {requestMessage} from '@/network/request';
 
 import {getTime} from '@/assets/js'; 
 
+import marked                                       from 'marked'
+import hljs                                         from 'highlight.js'
+
+marked.setOptions({
+    highlight: function (code) {
+        return hljs.highlightAuto(code).value
+    },
+    sanitize: true
+})
+
+const renderer = new marked.Renderer()
+// renderer.heading = function (text, level) {
+//     return '<a href="#' + text + '" class="hashTitle" data-scroll><h' + level +
+//             ' id="' + text + '">' + text + '</h' + level + '></a>'
+// }
+
+
 const requestMsg = requestMessage(5);
 
 export default {
   name: 'Detail',
   data() {
     return {
-      articData: [],
+      articData: {},
       moreTit: [],
       commentList: [],
       userState: false,
@@ -129,7 +146,10 @@ export default {
   computed: {
     artId() {
       return this.$route.params.id;
-    }
+    },
+    mdHtml () {
+            return marked(this.articData.content || '', { renderer: renderer })
+        }
   },
   filters: {
     getWholeTime(t) {
@@ -233,7 +253,7 @@ export default {
         method: 'post',
         data: { id: this.artId }
       }).then(res => {
-        // console.log(res.data.data);
+        console.log(res.data.data);
         this.articData = res.data.data;
       }).catch( (err) =>{
         console.log(err);
@@ -414,18 +434,27 @@ export default {
       .content {
         padding: 0 30px 10px;
         .text {
-          font-size: 14px;
-          color: #666;
-          padding: 30px 0;
-          line-height: 2;
-          letter-spacing: .8px;
-          border-top: 1px solid #666;
+          font-family: Georgia, "Times New Roman", "Microsoft YaHei", "微软雅黑",  STXihei, "华文细黑",  serif;
+            display: block;
+            /* height: 26.875rem; */
+            color: #000;
+            font-size: 1rem;
+            overflow-y: auto;
+            padding: 10px 25px 30px;
+            /* white-space: pre-wrap;
+            word-wrap: break-word; */
+            outline: none;
+            /* border: .5px solid #eee; */
+            background-color: #eee;
+            border-radius: 10px;
         }
         .des {
+          margin-top: 30px;
           padding: 30px;
           line-height: 1.8;
           background-color: #eee;
           color: #222;
+          border-radius: 10px;
           span.col, a {
             color: skyblue;
             &:hover {
