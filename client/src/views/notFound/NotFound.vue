@@ -1,6 +1,6 @@
 <template>
   <div class='not-found'>
-    <img src="http://localhost:5002/image/noFound.gif" alt="">
+    <img :src="baseUrl + '/image/noFound.gif'" alt="">
     <div class="text">
       您搜索的内容不在此星球 
     </div>
@@ -16,6 +16,11 @@ export default {
   methods: {
     handleClick() {
       this.$router.push('/home');
+    }
+  },
+  computed: {
+    baseUrl() {
+      return process.env.VUE_APP_BASE_API
     }
   }
 }

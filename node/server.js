@@ -60,4 +60,4 @@ app.get( '/', (req, res) => {
 
 app.use( '/', routes )
 
-app.listen( port, () => { console.log(port) } );
+app.listen( port, () => { console.log(port, process.env.PORT) } );

@@ -1,5 +1,6 @@
 <template>
   <div class='upload-img'>
+    <!-- {{baseUrl}} -->
     <el-dialog 
       title="上传头像 :"
       :visible.sync="UploadShow"
@@ -9,7 +10,7 @@
       
       <el-upload
         class="avatar-uploader"
-        action="http://localhost:5002/upload/avatar"
+        :action=" baseUrl + '/upload/avatar' "
         :show-file-list="false"
         :with-credentials ="true"
         :data= "getId"
@@ -33,6 +34,7 @@ export default {
       imageUrl: '',
     }
   },
+  
   props: {
     UploadShow: {
       type: Boolean,
@@ -46,6 +48,9 @@ export default {
       return {
         _id: this.$store.state.userInfo.id
       }
+    },
+    baseUrl() {
+      return process.env.VUE_APP_BASE_API
     }
   },
   methods: {
@@ -86,7 +91,10 @@ export default {
       }
       return isJPG && isLt50K;
     }
-  }
+  },
+  // created() {
+  //   console.log(this.baseUrl)
+  // }
 }
 </script>
 

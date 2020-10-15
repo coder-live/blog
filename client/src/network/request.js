@@ -3,7 +3,7 @@ import axios from 'axios';
 // import {Loading,Message} from 'element-ui';
 
 axios.defaults.headers.post['Content-Type']= 'application/x-www-form-urlencoded';
-
+console.log(process.env.VUE_APP_BASE_API)
 // let loading;
 // //封装loading 开始
 // function startLoading() {
@@ -20,7 +20,7 @@ axios.defaults.headers.post['Content-Type']= 'application/x-www-form-urlencoded'
 //总的请求
 export function request( config ) {
   const instance = axios.create({
-    baseURL: 'http://localhost:5002',
+    baseURL: process.env.VUE_APP_BASE_API,
     withCredentials: true
   });
 
@@ -30,7 +30,7 @@ export function request( config ) {
 //文章的主要请求 (涉及到下拉加载)
 export function requestArticle() {
   const instance = axios.create({
-    baseURL: 'http://localhost:5002',
+    baseURL: process.env.VUE_APP_BASE_API,
     withCredentials: true
   });
   // return instance(config);
@@ -58,7 +58,7 @@ export function requestArticle() {
 export function requestMessage(lmt) {
   // console.log(lmt)
   const instance = axios.create({
-    baseURL: 'http://localhost:5002',
+    baseURL: process.env.VUE_APP_BASE_API,
     withCredentials: true
   });
   // return instance(config);
