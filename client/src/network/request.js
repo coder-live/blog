@@ -3,7 +3,7 @@ import axios from 'axios';
 // import {Loading,Message} from 'element-ui';
 
 axios.defaults.headers.post['Content-Type']= 'application/x-www-form-urlencoded';
-console.log(process.env.VUE_APP_BASE_API)
+// console.log(process.env.VUE_APP_BASE_API)
 // let loading;
 // //封装loading 开始
 // function startLoading() {

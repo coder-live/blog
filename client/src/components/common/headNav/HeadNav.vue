@@ -106,6 +106,10 @@ export default {
           name: '关于',
           path: '/about'
         },
+        {
+          name: '练习',
+          path: '/practice/Sokoban'
+        },
       ],
       currentIndex: -1,
       hoverIndex: -1,

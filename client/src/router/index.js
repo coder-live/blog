@@ -10,9 +10,10 @@ const Message = () => import('../views/message/Message');
 const Diary = () => import('../views/diary/Diary');
 const FriendLink = () => import('../views/friendLink/FriendLink');
 const About = () => import('../views/about/About');
+const Practice = () => import('../views/Practice/practice');
 const NotFound = () => import('../views/notFound/NotFound');
 
-const Test = () => import('../views/test');
+// const Test = () => import('../views/test');
 
 Vue.use(VueRouter)
 
@@ -64,19 +65,19 @@ Vue.use(VueRouter)
     meta: ['萧逸-关于']
   },
   {
-    path: '/test',
-    name: 'Test',
-    component: Test,
-    meta: ['萧逸-测试路由']
+    path: '/practice/:id',
+    name: 'Practice',
+    component: Practice,
+    meta: ['萧逸-练习']
   },
   {
     path: '*',
     name: 'NotFound',
     component: NotFound,
-    meta: ['萧逸-未找到']
+    meta: ['未找到']
   },
 ]
-
+console.log()
 const router = new VueRouter({
   base: process.env.BASE_URL,
   routes

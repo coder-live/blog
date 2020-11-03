@@ -38,7 +38,10 @@
         </div>
       </div>
       <div class="hot-article">
-        <h4>热门文章</h4>
+        <!-- <el-badge :value="title.length" :max="99" class="item">
+          <h4>热门文章</h4>
+        </el-badge> -->
+          <h4>热门文章</h4>
         <ul>
           <li v-for= '(item, index) in title' :key="index">
             <span class="idx">{{index + 1}}</span>
@@ -238,7 +241,7 @@ export default {
         method: 'post'
       }).then( ({data}) => {
         this.tags= data.data.tags || [];
-        //console.log(this.tags);
+        // console.log(this.tags);
       } )
       .catch( (err) => console.log(err) );
     },
@@ -250,7 +253,7 @@ export default {
       })
       .then(({data}) => {
         this.title = data.data;
-        console.log(data);
+        // console.log(data);
       })
       .catch((err) => console.log(err));
     },

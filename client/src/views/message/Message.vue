@@ -4,7 +4,7 @@
     <div class="message-box">
       <div class="msg-block">
         <h1>留言板</h1>
-        <p>你若安好, 便来留言 !</p>
+        <p>可以留下你的足迹吗 !</p>
       </div>
       <LayEdit @sub='handleSubmit'/>
       <div class="message-list">

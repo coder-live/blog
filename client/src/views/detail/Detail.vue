@@ -445,14 +445,14 @@ export default {
             word-wrap: break-word; */
             outline: none;
             /* border: .5px solid #eee; */
-            background-color: #eee;
+            background-color: rgba(0,0,0,.06);
             border-radius: 10px;
         }
         .des {
           margin-top: 30px;
           padding: 30px;
           line-height: 1.8;
-          background-color: #eee;
+          background-color: #f0f2f5;
           color: #222;
           border-radius: 10px;
           span.col, a {
@@ -471,7 +471,7 @@ export default {
           min-height: 26px;
           line-height: 26px;
           padding: 5px 20px;
-          background-color: #f8f9f7;
+          background-color: #f0f2f5;
           font-size: 16px;
           font-weight: 400;
           color: #585957;
@@ -518,7 +518,7 @@ export default {
             min-height: 26px;
             line-height: 26px;
             padding: 5px 20px;
-            background-color: #f8f9f7;
+            background-color: #f0f2f5;
             font-size: 16px;
             font-weight: 400;
             color: #585957;

@@ -37,8 +37,7 @@
         </div>
       </section>
     </div>
-    <div class="loading" v-if= 'iscol.loading'>加载中
-      <span>.</span> <span>.</span> <span>.</span>
+    <div class="loading" v-if= 'iscol.loading'>加载中...
     </div>
     <div class="foot" v-if= 'iscol.noData'>没有更多了 !</div>
   </div>
@@ -314,8 +313,8 @@ export default {
       padding: 10px;
       text-align: center;
     }
-    >.loading span {
-      font-size: 20px;
+    /* >.loading span { */
+      /* font-size: 20px;
       @keyframes appeare {
         from {opacity: 0}
         to {opacity: 1}
@@ -331,8 +330,8 @@ export default {
       &:nth-child(3) {
         animation: appeare .7s infinite;
         animation-delay:.8s;
-      }
-    }
+      } */
+    /* } */
   }
   @media screen and (max-width: 800px) {
     .article-main {
