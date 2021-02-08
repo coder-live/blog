@@ -14,7 +14,7 @@
     "jwt-decode": "^2.2.0",
     "less": "^3.11.1",
     "less-loader": "^6.1.0",
-    "marked": "^1.2.0",
+    "marked": "^2.0.0",
     "nprogress": "^0.2.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
